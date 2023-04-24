@@ -6,6 +6,9 @@ class Rubric(models.Model):
                             db_index=True,
                             verbose_name="Название",)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "Рубрика"
         verbose_name_plural = "Рубрики"
@@ -41,7 +44,7 @@ class Bb(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return 'Объявление: ' + self.title
 
     class Meta:
         verbose_name = "Объявление"
