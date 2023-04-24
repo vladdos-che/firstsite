@@ -1,11 +1,29 @@
 from django.shortcuts import render
+from django.views.generic.edit import CreateView
 
+from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
+
+
+class BbCreateView(CreateView):
+    template_name = 'bboard/create.html'
+    form_class = BbForm
+    success_url = reverse_lazy = 'index'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        return context
 
 
 def index(request):
     bbs = Bb.objects.order_by('-published')
-    return render(request, "bboard/index.html", {"bbs": bbs})
+    rubrics = Rubric.objects.all()
+    context = {
+        'bbs': bbs,
+        'rubrics': rubrics,
+    }
+    return render(request, "bboard/index.html", context)
 
 
 def by_rubric(request, rubric_id):
