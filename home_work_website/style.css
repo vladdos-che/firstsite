@@ -1,0 +1,138 @@
+/* all */
+* {
+    margin: 0px;
+    color: chocolate;
+    background-color: black;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style-type: none;
+}
+
+br {
+    height: 2px;
+    background-color: chocolate;
+}
+
+.cont {
+	width: 80%;
+	margin: 0px auto;
+}
+
+.hover-a:hover {
+    color: black;
+    background-color: chocolate;
+    transition: 1s;
+}
+
+
+/* nav */
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 20px 20px rgba(210, 105, 30, 0.123);
+}
+
+#logo {
+    width: 100%;
+}
+
+#ways {
+    margin-top: 20px;
+    height: max-content;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#ways li {
+    height: max-content;
+    margin: 20px;
+}
+
+.way a {
+    text-align: center;
+    padding: 15px;
+    border: 1px solid;
+    transition: 1s;
+}
+
+
+/* list */
+#list {
+    margin-top: 30px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+#list li {
+    height: max-content;
+    padding: 20px;
+}
+
+#list a {
+    border: 1px solid;
+    padding: 10px;
+    margin: 5px;
+    font-size: medium;
+    transition: 1s;
+}
+
+
+/* cards */
+#cards {
+    margin-top: 30px;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.card {
+    width: 40%;
+    border: 1px solid;
+    border-radius: 180px;
+    margin: 20px;
+    padding: 15px;
+}
+
+
+/* footer */
+#foot {
+    box-shadow: 0 -20px 20px rgba(210, 105, 30, 0.123);
+    margin-top: 30px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    background-color: rgb(12, 12, 12);
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#foot * {
+    background-color: rgb(12, 12, 12);
+}
+
+.foots {
+    border: 1px solid;
+    margin: 15px;
+    padding: 15px;
+}
+
+
+/* media */
+@media(max-width: 900px) {
+    .card {
+        width: 100%;
+    }
+}
