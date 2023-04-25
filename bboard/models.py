@@ -10,18 +10,15 @@ class Rubric(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Рубрика"
-        verbose_name_plural = "Рубрики"
+        verbose_name_plural = 'Рубрики'
+        verbose_name = 'Рубрика'
         ordering = ['name']
 
 
 class Bb(models.Model):
-    rubric = models.ForeignKey(
-        'Rubric',
-        null=True,
-        on_delete=models.PROTECT,
-        verbose_name="Рубрика",
-    )
+    rubric = models.ForeignKey('Rubric', null=True,
+                               on_delete=models.PROTECT,
+                               verbose_name='Рубрика')
 
     title = models.CharField(
         max_length=50,
