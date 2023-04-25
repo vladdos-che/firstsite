@@ -2,7 +2,7 @@ import requests  # https://docs-python.ru/packages/modul-requests-python/poluche
 
 
 class MyJsonFile:
-    f = f"JSON: {requests.get('https://jsonplaceholder.typicode.com/todos/').json()}"
+    f = requests.get('https://jsonplaceholder.typicode.com/todos/').json()
 
     # Для вывода в консоль Джанго используйте:
     # 1) python .\manage.py shell
