@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from bboard.views import index
+from bboard.views import index, by_rubric, BbCreateView
 
 urlpatterns = [
-    path('', index),
+    path('', index, name='index'),
+    path('<int:rubric_id>/', by_rubric, name='by_rubric'),
+    path('add/', BbCreateView.as_view(), name='by_rubric'),
 ]
