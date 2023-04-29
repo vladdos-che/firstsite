@@ -1,0 +1,9 @@
+git --version
+git init
+git status
+git remote add origin *ссылка на git*
+git pull origin master
+git add --all
+git commit -m "lesson_39 files"
+git push origin master
+git checkout -b lesson_02
