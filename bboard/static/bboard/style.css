@@ -19,3 +19,8 @@ nav a {
 section {
     margin-left: 170px;
 }
+
+
+#login_confirmed {
+    display: none;
+}

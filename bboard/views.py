@@ -37,3 +37,11 @@ def by_rubric(request, rubric_id):
         'current_rubric': current_rubric
     }
     return render(request, 'bboard/by_rubric.html', context)
+
+
+def login(request):
+    rubrics = Rubric.objects.all()
+    context = {
+        'rubrics': rubrics,
+    }
+    return render(request, 'bboard/login.html', context)
