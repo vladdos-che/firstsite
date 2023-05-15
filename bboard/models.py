@@ -1,4 +1,27 @@
+from django.core import validators
+from django.core.exceptions import ValidationError
 from django.db import models
+
+
+def get_min_length():
+    min_length = 3
+    return min_length
+
+
+def validate_even(val):
+    if val % 2 != 0:
+        raise ValidationError('Число %(value)s нечётное', code='odd', params={'value': val})
+
+
+class MinMaxValueValidator:
+    def __init__(self, min_value, max_value):
+        self.min_value = min_value
+        self.max_value = max_value
+
+    def __call__(self, val):
+        if val < self.min_value or val > self.max_value:
+            raise ValidationError('Введёное чило должно быть > %(min)s и < %(max)s', code='out_of_range',
+                                  params={'min': self.min_value, 'max': self.max_value})
 
 
 class Rubric(models.Model):
@@ -21,7 +44,7 @@ class Rubric(models.Model):
             super().save(*args, **kwargs)
         # Выполняем действия после сохраения
 
-    def delte(self, *args, **kwargs):
+    def delete(self, *args, **kwargs):
         # Выполняем действия до удаления
         if True:
             super().save(*args, **kwargs)
@@ -44,6 +67,9 @@ class Bb(models.Model):
     title = models.CharField(
         max_length=50,
         verbose_name="Товар",
+        validators=[validators.MinLengthValidator(get_min_length)],
+        # validators=[validators.ProhibitNullCharactersValidator()],  # \x00
+        error_messages={'min_length': 'Слишком мало символов, min: 3'}
     )
 
     content = models.TextField(
@@ -56,6 +82,7 @@ class Bb(models.Model):
         null=True,
         blank=True,
         verbose_name="Цена",
+        validators=[validate_even, MinMaxValueValidator(50, 60_000_000)],
     )
 
     published = models.DateTimeField(
