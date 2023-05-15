@@ -15,6 +15,18 @@ class Rubric(models.Model):
         # return f"/bboard/{self.pk}/"
         return f"/{self.pk}/"
 
+    def save(self, *args, **kwargs):
+        # Выполняем действия до сохраения
+        if True:
+            super().save(*args, **kwargs)
+        # Выполняем действия после сохраения
+
+    def delte(self, *args, **kwargs):
+        # Выполняем действия до удаления
+        if True:
+            super().save(*args, **kwargs)
+        # Выполняем действия после удаления
+
     class Meta:
         verbose_name = 'Рубрика'
         verbose_name_plural = 'Рубрики'
@@ -54,6 +66,11 @@ class Bb(models.Model):
 
     def __str__(self):
         return f'Объявление: {self.title}'
+
+    def title_and_price(self):
+        if self.price:
+            return f"{self.title} ({self.price:.2f})"
+        return self.title
 
     class Meta:
         verbose_name = "Объявление"
