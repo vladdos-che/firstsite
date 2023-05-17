@@ -1,0 +1,57 @@
+[
+  {
+    "model": "bboard.bb",
+    "pk": 1,
+    "fields": {
+      "rubric": 1,
+      "title": "Дача",
+      "content": "Общество \"Двухэтажники\". Два этажа, кирпич, свет, газ, канализация",
+      "price": 500000.0,
+      "published": "2023-04-29T14:34:32.014Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 2,
+    "fields": {
+      "rubric": 1,
+      "title": "Дом",
+      "content": "Трехэтажный, кирпич",
+      "price": 50000000.0,
+      "published": "2023-04-29T14:35:09.290Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 3,
+    "fields": {
+      "rubric": 2,
+      "title": "Бобёр ездовой",
+      "content": "",
+      "price": 100500.0,
+      "published": "2023-04-29T14:41:44.522Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 4,
+    "fields": {
+      "rubric": 1,
+      "title": "Плотина ездового бобра",
+      "content": "",
+      "price": 15.0,
+      "published": "2023-04-29T14:42:07.181Z"
+    }
+  },
+  {
+    "model": "bboard.bb",
+    "pk": 5,
+    "fields": {
+      "rubric": 2,
+      "title": "Хомяк бегущий",
+      "content": "",
+      "price": 500.0,
+      "published": "2023-04-29T14:43:29.207Z"
+    }
+  }
+]
