@@ -57,6 +57,12 @@ class Rubric(models.Model):
 
 
 class Bb(models.Model):
+    KINDS = (
+        ('b', 'Куплю'),
+        ('s', 'Продам'),
+        ('c', 'Поменяю')
+    )
+
     rubric = models.ForeignKey(
         'Rubric',
         null=True,
@@ -70,6 +76,12 @@ class Bb(models.Model):
         validators=[validators.MinLengthValidator(get_min_length)],
         # validators=[validators.ProhibitNullCharactersValidator()],  # \x00
         error_messages={'min_length': 'Слишком мало символов, min: 3'},
+    )
+
+    kind = models.CharField(
+        max_length=1,
+        choices=KINDS,
+        default='s',
     )
 
     content = models.TextField(
