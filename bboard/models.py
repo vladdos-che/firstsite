@@ -106,6 +106,11 @@ class Bb(models.Model):
         ordering = ['-published', 'title']
 
 
+def positive_num_validator(val):
+    if val < 0:
+        raise ValidationError(f'Число {val} меньше 0', code='negative')
+
+
 class IceCreamKiosk(models.Model):
     name = models.CharField(
         max_length=20,
@@ -115,6 +120,9 @@ class IceCreamKiosk(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_sum_id(self):
+        return self.pk + self.pk
 
     class Meta:
         verbose_name = 'Киоск с мороженным'
@@ -145,6 +153,7 @@ class IceCream(models.Model):
         null=True,
         blank=True,
         verbose_name="Цена",
+        validators=[positive_num_validator],
     )
 
     published = models.DateTimeField(
@@ -169,6 +178,9 @@ class IceCream(models.Model):
 
     def __str__(self):
         return f'Мороженое: {self.title}'
+
+    def get_sum_id_price(self):
+        return self.pk + self.price
 
     class Meta:
         verbose_name = "Мороженое"
@@ -204,6 +216,9 @@ class Parent(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_sum_id(self):
+        return self.pk + self.pk
 
     class Meta:
         verbose_name = "Родитель"
@@ -246,6 +261,9 @@ class Child(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_sum_id(self):
+        return self.parent.pk + self.pk
 
     class Meta:
         verbose_name = "Ребёнок"
