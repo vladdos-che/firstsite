@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
+    'authapp',
 ]
 
 MIDDLEWARE = [
