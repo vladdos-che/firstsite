@@ -4,11 +4,11 @@
     {% if user.is_authenticated %}
         <h3>
             <a href="{% url 'authapp:logout' %}">
-                Выйти: {{ user.username }}
+                Logout: {{ user.username }}
             </a>
         </h3>
     {% else %}
-        <a href="/admin/login/">
+        <a href="{% url 'authapp:login' %}">
             Login
         </a>
     {% endif %}
