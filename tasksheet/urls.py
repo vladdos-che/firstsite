@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from tasksheet.views import index, login, my_tasks, history, add_task
+from tasksheet.views import index, login, my_tasks, history, add_task, lesson_15_hw
 
 urlpatterns = [
     path('', index, name='index'),
@@ -17,4 +17,6 @@ urlpatterns = [
 
     path('add_task/', add_task, name='add_task'),
     # re_path(r'^add_task/$', add_task, name='add_task'),
+
+    path('lesson_15_hw/', lesson_15_hw, name='lesson_15_hw'),
 ]
