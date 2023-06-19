@@ -1,6 +1,6 @@
 from django.db.models import Min, Max, Count, Q, Sum, IntegerField, Avg
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -39,6 +39,13 @@ def index_resp(request):
     return resp
 
 
+# def index(request):
+#     resp_content = ('Здесь будет', ' главная', ' страница', ' сайта')
+#     resp = StreamingHttpResponse(resp_content,
+#                                  content_type='text/plain; charset=utf-8')
+#     return resp
+
+
 def index(request):
     bbs = Bb.objects.all()
     rubrics = Rubric.objects.all()
@@ -50,6 +57,11 @@ def index(request):
 
     # return HttpResponse(template.render(context=context, request=request))
     return HttpResponse(render_to_string('bboard/index.html', context, request))
+
+    # data = {'title': 'Мотоцикл', 'content': 'Старый', 'price': 10_000.0}
+    # return JsonResponse(data)
+
+    # return redirect('by_rubric', rubric_id=|сюда какой-то объект|.cleaned_data['rubric'].pk)
 
 
 def index_old(request):
@@ -172,3 +184,13 @@ def add_and_save(request):
         bbf = BbForm()
         context = {'form': bbf}
         return render(request, 'bboard/create.html', context)
+
+
+def detail(request, rec_id):
+    bb = get_object_or_404(Bb, pk=rec_id)
+    bbs = get_list_or_404(Bb, rubric=bb.rubric.pk)
+    context = {
+        'bbs': bbs,
+        'bb': bb
+    }
+    return HttpResponse(render_to_string('bboard/detail.html', context, request))
