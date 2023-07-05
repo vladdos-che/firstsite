@@ -5,7 +5,8 @@ from django.template.loader import get_template, render_to_string
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
+from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
 
@@ -63,7 +64,7 @@ class BbAddView(FormView):
         return self.object
 
     def get_success_url(self):
-        return reverse('bboard:by_rubric', kwargs={'rubric_id': self.object.cleaned_data['rubric'].pk})
+        return reverse('by_rubric', kwargs={'rubric_id': self.object.cleaned_data['rubric'].pk})
 
 
 # def index_resp(request):
@@ -157,23 +158,41 @@ class BbAddView(FormView):
 #     return render(request, 'bboard/index.html', context)
 
 
-class BbIndexView(TemplateView):
+# class BbIndexView(TemplateView):
+#     template_name = 'bboard/index.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['rubrics'] = Rubric.objects.all()
+#         context['bbs'] = Bb.objects.order_by('-published')
+#         context['count_bb'] = count_bb()
+#         result = Bb.objects.aggregate(min_price=Min('price'),
+#                                                  max_price=Max('price'),
+#                                                  diff_price=Max('price') - Min('price'),
+#                                                  )
+#         context['min_price'] = result.get('min_price')
+#         context['max_price'] = result.get('min_price')
+#         context['diff_price'] = result.get('diff_price')
+#
+#         return context
+
+
+class BbIndexView(ArchiveIndexView):
+    model = Bb
+    date_field = 'published'
+    date_list_period = 'year'
     template_name = 'bboard/index.html'
+    context_object_name = 'bbs'
+    allow_empty = True
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
         context['rubrics'] = Rubric.objects.all()
-        context['bbs'] = Bb.objects.order_by('-published')
-        context['count_bb'] = count_bb()
-        result = Bb.objects.aggregate(min_price=Min('price'),
-                                                 max_price=Max('price'),
-                                                 diff_price=Max('price') - Min('price'),
-                                                 )
-        context['min_price'] = result.get('min_price')
-        context['max_price'] = result.get('min_price')
-        context['diff_price'] = result.get('diff_price')
-
         return context
+
+
+class BbIndexRedirectView(RedirectView):
+    url = '/'
 
 
 # def by_rubric(request, rubric_id, **kwargs):
@@ -286,6 +305,10 @@ class BbDetailView(DetailView):
         return context
 
 
+class BbRedirectView(RedirectView):
+    url = '/detail/%(pk)d/'
+
+
 class BbEditView(UpdateView):
     model = Bb
     form_class = BbForm
@@ -300,3 +323,10 @@ class BbEditView(UpdateView):
 class BbDeleteView(DeleteView):
     model = Bb
     success_url = reverse_lazy('index')
+
+
+class BbMonthArchiveView(MonthArchiveView):
+    model = Bb
+    date_field = "published"
+    month_format = '%m'
+    context_object_name = 'bbs'
