@@ -1,0 +1,9 @@
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('bboard.urls')),
+    path('auth/', include('authapp.urls', namespace='authapp')),
+    path('sheets/', include('tasksheet.urls'))
+]
