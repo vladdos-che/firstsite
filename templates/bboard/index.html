@@ -1,6 +1,8 @@
 {% extends "layout/basic.html" %}
 
 {% block content %}
+    <p>{{ block.super }}</p>
+
     {% if user.is_authenticated %}
         <h3>
             <a href="{% url 'authapp:logout' %}">
