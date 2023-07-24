@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Min, Max, Count, Q, Sum, IntegerField, Avg
 from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
@@ -12,6 +13,8 @@ from django.urls import reverse
 
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
+
+import logging  # lesson_16_hw
 
 
 def count_bb():
@@ -195,20 +198,77 @@ class BbIndexRedirectView(RedirectView):
     url = '/'
 
 
-# def by_rubric(request, rubric_id, **kwargs):
-#     bbs = Bb.objects.filter(rubric=rubric_id)
+# def index(request):
 #     rubrics = Rubric.objects.all()
-#     current_rubric = Rubric.objects.get(pk=rubric_id)
+#     bbs = Bb.objects.all()
+#     paginator = Paginator(bbs, 5)
 #
-#     context = {
-#         'bbs': bbs,
-#         'rubrics': rubrics,
-#         'current_rubric': current_rubric,
-#         'count_bb': count_bb(),
-#         # 'name': kwargs.get('name'),
-#         'kwargs': kwargs,
-#     }
-#     return render(request, 'bboard/by_rubric.html', context)
+#     if 'page' in request.GET:
+#         page_num = request.GET['page']
+#     else:
+#         page_num = 1
+#
+#     page = paginator.get_page(page_num)
+#     context = {'rubrics': rubrics, 'page': page, 'bbs': page.object_list}
+#
+#     return render(request, 'bboard/index.html', context)
+
+
+def index(request, page=1):
+    rubrics = Rubric.objects.all()
+    bbs = Bb.objects.all()
+    paginator = Paginator(bbs, 5)
+
+    try:
+        bbs_paginator = paginator.get_page(page)
+    except EmptyPage:
+        bbs_paginator = paginator.get_page(paginator.num_pages)
+    except PageNotAnInteger:
+        bbs_paginator = paginator.get_page(paginator.num_pages)
+
+    context = {'rubrics': rubrics, 'page': bbs_paginator, 'bbs': bbs_paginator.object_list}
+
+    return render(request, 'bboard/index.html', context)
+
+
+def by_rubric(request, rubric_id, **kwargs):
+    bbs = Bb.objects.filter(rubric=rubric_id)
+    rubrics = Rubric.objects.all()
+    current_rubric = Rubric.objects.get(pk=rubric_id)
+    paginator = Paginator(bbs, 1)
+
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+
+    context = {
+        'bbs': page.object_list,
+        'rubrics': rubrics,
+        'current_rubric': current_rubric,
+        'count_bb': count_bb(),
+        'page': page,
+        # 'name': kwargs.get('name'),
+        # 'kwargs': kwargs,
+    }
+    return render(request, 'bboard/by_rubric.html', context)
+
+
+class BbByRubricView(ListView):
+    template_name = 'bboard/by_rubric.html'
+    context_object_name = 'bbs'
+    paginate_by = 2
+
+    def get_queryset(self):
+        return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        context['current_rubric'] = Rubric.objects.get(pk=self.kwargs['rubric_id'])
+        return context
 
 
 # class BbByRubricView(TemplateView):
@@ -222,18 +282,18 @@ class BbIndexRedirectView(RedirectView):
 #         return context
 
 
-class BbByRubricView(ListView):
-    template_name = 'bboard/by_rubric.html'
-    context_object_name = 'bbs'
-
-    def get_queryset(self):
-        return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['rubrics'] = Rubric.objects.all()
-        context['current_rubric'] = Rubric.objects.get(pk=self.kwargs['rubric_id'])
-        return context
+# class BbByRubricView(ListView):
+#     template_name = 'bboard/by_rubric.html'
+#     context_object_name = 'bbs'
+#
+#     def get_queryset(self):
+#         return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['rubrics'] = Rubric.objects.all()
+#         context['current_rubric'] = Rubric.objects.get(pk=self.kwargs['rubric_id'])
+#         return context
 
 
 def login(request):  # Моё не нужное
@@ -243,7 +303,15 @@ def login(request):  # Моё не нужное
         'count_bb': count_bb(),
 
     }
+
+    logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w", encoding='utf-8')  # lesson_16_hw
+    logging.info(request)
+
     return render(request, 'bboard/login.html', context)
+
+
+class BbLoginRedirectView(RedirectView):  # lesson_16_hw
+    url = '/'
 
 
 # def add(request):
