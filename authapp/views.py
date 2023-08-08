@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.urls import reverse
-from django.views.generic import TemplateView, ListView
+from django.views.generic import ListView, FormView, TemplateView
+from django.urls import reverse_lazy
 
 from authapp.forms import UserLoginForm, UserViewForm
 from authapp.models import MyUser
@@ -62,22 +63,31 @@ def logout(request):
 #     return render(request, 'authapp/userview.html', context)
 
 
-class UserByNameView(TemplateView):  # lesson_19_hw
+class UserByNameView(FormView):  # lesson_19_hw
     template_name = 'authapp/userview.html'
+    form_class = UserViewForm
+    success_url = '/auth/user/'
     title = "UserSearch"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if self.request.method == "POST":
+            print('post')
             user_form = UserViewForm(data=self.request.POST)
             if user_form.is_valid():
-                context['my_user'] = MyUser.objects.get(self.request.POST['user_name'])
+                print('user')
+                data = user_form.cleaned_data.get("user_name")
+                my_user = MyUser.objects.get(name=data)
+                context['my_user'] = my_user
         else:
             user_form = UserViewForm()
 
         context['user_form'] = user_form
         return context
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
 
 class UserListView(ListView):  # lesson_19_hw

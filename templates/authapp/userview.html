@@ -7,9 +7,8 @@
 
     <form action="{% url 'authapp:user' %}" method="post">
         {% csrf_token %}
-        <label for="user_name">User name: </label>
-        <input id="user_name" type="text" name="user_name" maxlength="100" required>
-        <button type="submit">Search</button>
+        {{ form.as_p }}
+        <button type="submit">Поиск</button>
     </form>
 
     <p>{{ my_user }}</p>
