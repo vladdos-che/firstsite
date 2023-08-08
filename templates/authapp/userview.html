@@ -5,7 +5,7 @@
 {% block content %}
     <h2>{{ title|title }}</h2>
 
-    <form action="{% url 'authapp:user' %}" method="post">
+    <form action="" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Поиск</button>

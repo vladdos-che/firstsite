@@ -69,25 +69,30 @@ class UserByNameView(FormView):  # lesson_19_hw
     success_url = '/auth/user/'
     title = "UserSearch"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if self.request.method == "POST":
-            print('post')
-            user_form = UserViewForm(data=self.request.POST)
-            if user_form.is_valid():
-                print('user')
-                data = user_form.cleaned_data.get("user_name")
-                my_user = MyUser.objects.get(name=data)
-                context['my_user'] = my_user
-        else:
-            user_form = UserViewForm()
-
-        context['user_form'] = user_form
-        return context
+    user_form = None
+    my_user = None
 
     def form_valid(self, form):
+        if self.request.method == "POST":
+            self.user_form = UserViewForm(data=self.request.POST)
+            if self.user_form.is_valid():
+                data = self.user_form.cleaned_data.get("user_name")
+                self.my_user = MyUser.objects.get(name=data)
+        else:
+            self.user_form = UserViewForm()
+        self.get_context_data()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        print(self.user_form)
+        print(self.my_user)
+
+        context = super().get_context_data(**kwargs)
+
+        context['my_user'] = self.my_user
+        context['user_form'] = self.user_form
+
+        return context
 
 
 class UserListView(ListView):  # lesson_19_hw
