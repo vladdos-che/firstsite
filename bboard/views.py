@@ -271,6 +271,25 @@ class BbByRubricView(ListView):
         return context
 
 
+class BbByRubricByDateView(ArchiveIndexView):  # lesson_20_hw
+    template_name = 'bboard/by_rubric.html'
+    context_object_name = 'bbs'
+    paginate_by = 2
+    model = Bb
+    date_field = 'published'
+    date_list_period = 'year'
+    allow_empty = True
+
+    def get_queryset(self):
+        return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        context['current_rubric'] = Rubric.objects.get(pk=self.kwargs['rubric_id'])
+        return context
+
+
 # class BbByRubricView(TemplateView):
 #     template_name = 'bboard/by_rubric.html'
 #
