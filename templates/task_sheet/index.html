@@ -1,0 +1,18 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Главная | Список задачь{% endblock %}
+{% block h1 %}Главная | Список задачь{% endblock %}
+
+{% block content %}
+    {% for task in tasks %}
+        <p>
+            <h1><a href="{% url 'task' pk=task.pk %}">
+                {{ task.title }}
+            </a></h1>
+
+            <h5>Сделать до: {{ task.do_before_date }}</h5>
+
+            <a href="{% url 'task_delete' pk=task.pk %}">Удалить</a>
+        </p>
+    {% endfor %}
+{% endblock %}

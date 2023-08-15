@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <h1>{% block h1 %}{% endblock %}</h1>
+
+    <a href="{% url 'index' %}">Главная</a>
+    <a href="{% url 'task_create' %}">Создать</a>
+
+    {% block content %}{% endblock %}
+</body>
+</html>
