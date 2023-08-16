@@ -14,6 +14,8 @@ from django.urls import reverse
 from bboard.forms import BbForm
 from bboard.models import Bb, Rubric
 
+import logging  # lesson_16_hw
+
 
 def count_bb():
     result = dict()
@@ -269,6 +271,25 @@ class BbByRubricView(ListView):
         return context
 
 
+class BbByRubricByDateView(ArchiveIndexView):  # lesson_20_hw
+    template_name = 'bboard/by_rubric.html'
+    context_object_name = 'bbs'
+    paginate_by = 2
+    model = Bb
+    date_field = 'published'
+    date_list_period = 'year'
+    allow_empty = True
+
+    def get_queryset(self):
+        return Bb.objects.filter(rubric=self.kwargs['rubric_id'])
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['rubrics'] = Rubric.objects.all()
+        context['current_rubric'] = Rubric.objects.get(pk=self.kwargs['rubric_id'])
+        return context
+
+
 # class BbByRubricView(TemplateView):
 #     template_name = 'bboard/by_rubric.html'
 #
@@ -301,7 +322,15 @@ def login(request):  # Моё не нужное
         'count_bb': count_bb(),
 
     }
+
+    logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w", encoding='utf-8')  # lesson_16_hw
+    logging.info(request)
+
     return render(request, 'bboard/login.html', context)
+
+
+class BbLoginRedirectView(RedirectView):  # lesson_16_hw
+    url = '/'
 
 
 # def add(request):

@@ -43,17 +43,17 @@
     {% endif %}
 
     {% for bb in bbs %}
-        <div>
+        <div class="{% cycle 'red' 'green' 'blue' %}">  {# lesson_22_hw #}
 {#            <h2>{{ bb.title }}</h2>#}
             <h2>
 {#                <a href="{% url 'read' bb.pk %}">#}
                 <a href="{% url 'detail' pk=bb.pk %}">
-                    {{ bb.title_and_price }}
+                    {{ bb.title_and_price|lower|title }}
                 </a>
             </h2>
-            <p>{{ bb.content }}</p>
+            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}
             <p><a href="{{ bb.rubric.get_absolute_url }}">
-                {{ bb.rubric.name }}</a></p>
+                {{ bb.rubric.name|upper }}</a></p>
             <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
         </div>
     {% endfor %}

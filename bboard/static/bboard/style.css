@@ -20,15 +20,6 @@ section {
     margin-left: 170px;
 }
 
-.red {
-    background-color: crimson;
-}
-.green {
-    background-color: chartreuse;
-}
-.blue {
-    background-color: cornflowerblue;
-}
 
 #login_confirmed {
     display: none;
