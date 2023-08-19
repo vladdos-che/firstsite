@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.generic import ListView, FormView, TemplateView
 from django.urls import reverse_lazy
 
-from authapp.forms import UserLoginForm, UserViewForm
+from authapp.forms import UserLoginForm, UserViewForm, RegisterUserForm
 from authapp.models import MyUser
 
 
@@ -29,6 +29,26 @@ def login(request):
     }
 
     return render(request, 'authapp/login.html', context)
+
+
+def register(request):
+    title = "регистрация"
+
+    if request.method == 'POST':
+        register_form = RegisterUserForm(data=request.POST)
+
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect(reverse('authapp:login'))
+    else:
+        register_form = RegisterUserForm()
+
+    context = {
+        'title': title,
+        'register_form': register_form,
+    }
+
+    return render(request, 'authapp/register.html', context)
 
 
 def logout(request):
