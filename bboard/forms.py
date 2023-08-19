@@ -3,7 +3,7 @@ from django.forms import ModelForm, modelform_factory, DecimalField
 from django import forms
 from django.forms.widgets import Select
 from django.core import validators
-from bboard.models import Bb, Rubric
+from bboard.models import Bb, Rubric, IceCream
 
 
 # class BbForm(ModelForm):
@@ -35,10 +35,10 @@ class BbForm(forms.ModelForm):
                             validators=[validators.RegexValidator(regex='^.{4,}$')],
                             error_messages={'invalid': 'Слишком короткое название товара!'})
 
-    content = forms.CharField(label='Описание',
-                              widget=forms.widgets.Textarea(),
-                              validators=[validators.RegexValidator(regex='^.{30,}$')],   # lesson_26_hw
-                              error_messages={'invalid': 'Описание товара должно быть больше 30 символов!'})  # lesson_26_hw
+    # content = forms.CharField(label='Описание',
+    #                           widget=forms.widgets.Textarea(),
+    #                           validators=[validators.RegexValidator(regex='^.{30,}$')],   # lesson_26_hw
+    #                     error_messages={'invalid': 'Описание товара должно быть больше 30 символов!'})  # lesson_26_hw
     price = forms.DecimalField(label='Цена', decimal_places=2)
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(),
                                     label='Рубрика',
@@ -63,7 +63,7 @@ class BbForm(forms.ModelForm):
 
     class Meta:
         model = Bb
-        fields = ('title', 'content', 'price', 'rubric')
+        fields = ('title', 'price', 'rubric')  # lesson_25_hw убрал content
 
 
 # class BbForm(forms.ModelForm):
@@ -77,3 +77,9 @@ class BbForm(forms.ModelForm):
 #         model = Bb
 #         fields = ('title', 'content', 'price', 'rubric')
 #         labels = {'title': 'Название товара'}
+
+
+class IceCreamForm(ModelForm):  # lesson_25_hw
+    class Meta:
+        model = IceCream
+        fields = ('title', 'content', 'price', 'quantity', 'compound')

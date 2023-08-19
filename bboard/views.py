@@ -11,7 +11,7 @@ from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
 
-from bboard.forms import BbForm
+from bboard.forms import BbForm, IceCreamForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
@@ -417,3 +417,9 @@ class BbMonthArchiveView(MonthArchiveView):
     date_field = "published"
     month_format = '%m'
     context_object_name = 'bbs'
+
+
+class IceCreamCreateView(CreateView):  # lesson_25_hw
+    template_name = 'bboard/icecream_create.html'
+    form_class = IceCreamForm
+    success_url = '/'
