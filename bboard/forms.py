@@ -3,7 +3,7 @@ from django.forms import ModelForm, modelform_factory, DecimalField
 from django import forms
 from django.forms.widgets import Select
 from django.core import validators
-from bboard.models import Bb, Rubric
+from bboard.models import Bb, Rubric, IceCream
 
 
 # class BbForm(ModelForm):
@@ -75,3 +75,9 @@ class BbForm(forms.ModelForm):
 #         model = Bb
 #         fields = ('title', 'content', 'price', 'rubric')
 #         labels = {'title': 'Название товара'}
+
+
+class IceCreamForm(ModelForm):  # lesson_25_hw
+    class Meta:
+        model = IceCream
+        fields = ('title', 'content', 'price', 'quantity', 'compound')

@@ -16,7 +16,7 @@ class RegisterUserForm(UserCreationForm):
     # password1 = forms.CharField(label='Пароль')
     # password2 = forms.CharField(label='Пароль (повторно)')
 
-    def clean_username(self):
+    def clean_username(self):  # lesson_26_hw
         val = self.cleaned_data['username']
         if val[0] == '@':
             raise ValidationError('Первым символом нельзя использовать @!')
@@ -24,7 +24,7 @@ class RegisterUserForm(UserCreationForm):
             raise ValidationError('Последним символом должен быть @!')
         return val
 
-    def clean(self):
+    def clean(self):  # lesson_26_hw
         super().clean()
         errors = {}
         if not re.match(r'[A-Z]', self.cleaned_data['password1']):

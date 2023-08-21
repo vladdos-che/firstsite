@@ -47,7 +47,7 @@ class Rubric(models.Model):
     def delete(self, *args, **kwargs):
         # Выполняем действия до удаления
         if True:
-            super().save(*args, **kwargs)
+            super().delete(*args, **kwargs)
         # Выполняем действия после удаления
 
     class Meta:

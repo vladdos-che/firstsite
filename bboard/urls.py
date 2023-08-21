@@ -3,7 +3,8 @@ from django.views.generic.dates import WeekArchiveView
 
 from bboard.models import Bb
 from bboard.views import BbAddView, login, BbByRubricView, BbDetailView, BbIndexView, BbMonthArchiveView, \
-    BbRedirectView, BbIndexRedirectView, index, by_rubric, BbLoginRedirectView, BbByRubricByDateView
+    BbRedirectView, BbIndexRedirectView, index, by_rubric, BbLoginRedirectView, BbByRubricByDateView, \
+    IceCreamCreateView, rubrics, bbs
 
 vals = {
     'name': 'index',
@@ -19,6 +20,8 @@ vals = {
 
 urlpatterns = [
     path(r'', index, name='index'),
+    path(r'rubrics/', rubrics, name='rubrics'),
+    path(r'bbs/<int:rubric_id>/', bbs, name='bbs'),
     path(r'page/<int:page>/', index, name='page'),
     # path('', BbIndexView.as_view(), name='index'),
     path('index/', BbIndexRedirectView.as_view(), name='index_old'),
@@ -46,4 +49,6 @@ urlpatterns = [
     )),
     path('detail/<int:pk>/', BbDetailView.as_view(), name='detail'),
     path('detail/<int:year>/<int:month>/<int:day>/<int:pk>/', BbRedirectView.as_view(), name='old_detail'),
+
+    path('add_icecream/', IceCreamCreateView.as_view(), name='add_icecream'),  # lesson_25_hw
 ]
