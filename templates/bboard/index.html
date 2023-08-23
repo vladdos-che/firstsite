@@ -30,18 +30,6 @@
 
     <p>{{ block.super }}</p>
 
-    {% if user.is_authenticated %}
-        <h3>
-            <a href="{% url 'authapp:logout' %}">
-                Logout: {{ user.username }}
-            </a>
-        </h3>
-    {% else %}
-        <a href="{% url 'authapp:login' %}">
-            Login
-        </a>
-    {% endif %}
-
     {% for bb in bbs %}
         <div class="{% cycle 'red' 'green' 'blue' %}">  {# lesson_22_hw #}
 {#            <h2>{{ bb.title }}</h2>#}

@@ -1,0 +1,25 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+    <h2>Вход</h2>
+
+{#    {% if 'bboard.ad_bb' in perms %}#}
+{#    {% if perms.bboard.ad_bb %}#}
+
+    {% if user.is_authenticated %}
+        <p>Вы уже вошли <a href="{% url 'index' %}">Главная</a></p>
+    {% else %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+
+        <button type="submit">Login</button>
+    </form>
+    {% endif %}
+{% endblock %}

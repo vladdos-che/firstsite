@@ -34,7 +34,6 @@ urlpatterns = [
     # path('add/save/', add_save, name='add_save'),
     # path('add/', add, name='add'),
     # path('add/', add_and_save, name='add'),
-    path('login/', login, name='login'),
 
     path('loginme/', BbLoginRedirectView.as_view(), name='login_me'),  # lesson_16_hw
 

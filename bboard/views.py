@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Min, Max, Count, Q, Sum, IntegerField, Avg
 from django.forms import modelformset_factory, inlineformset_factory
@@ -49,10 +51,18 @@ class BbCreateView(CreateView):
         return context
 
 
-class BbAddView(FormView):
+# class BbAddView(FormView):
+# class BbAddView(LoginRequiredMixin, FormView):
+class BbAddView(UserPassesTestMixin, FormView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     initial = {'price': 0.0}
+
+    # Start For UserPassesTestMixin
+    def test_func(self):
+        return self.request.user.is_staff
+
+    # End For UserPassesTestMixin
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -426,6 +436,9 @@ class IceCreamCreateView(CreateView):  # lesson_25_hw
     success_url = '/'
 
 
+@permission_required(('bboard.add_rubriс', 'bboard.change_rubric', 'bboard.delete_rubric'))
+@user_passes_test(lambda user: user.is_staff)
+@login_required
 def rubrics(request):
     # RubricFromSet = modelformset_factory(Rubric, fields=('name',),
     #                                      can_order=True, can_delete=True)
@@ -457,6 +470,15 @@ def rubrics(request):
 
 
 def bbs(request, rubric_id):
+    # if request.user.has_perm('bboard.delete_bb'):  # request.user.has_perms  # lesson_28
+    #     pass
+
+    # request.user.get_user_permissions()  # lesson_28
+    # request.user.get_group_permissions()  # lesson_28
+    # request.user.get_all_permissions()  # lesson_28
+
+    # User.objects.with_perm('bboard.add_bb', include_superusers=False)  # lesson_28
+
     BbsFormSet = inlineformset_factory(Rubric, Bb, form=BbForm, extra=1)  # extra=3 по умолчанию
     rubric = Rubric.objects.get(pk=rubric_id)
 
