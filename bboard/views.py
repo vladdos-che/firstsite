@@ -201,7 +201,8 @@ class BbIndexView(ArchiveIndexView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['rubrics'] = Rubric.objects.all()
+        # context['rubrics'] = Rubric.objects.all()
+        context['rubrics'] = Rubric.objects.order_by_bb_count()
         return context
 
 
@@ -226,8 +227,11 @@ class BbIndexRedirectView(RedirectView):
 
 
 def index(request, page=1):
-    rubrics = Rubric.objects.all()
-    bbs = Bb.objects.all()
+    # rubrics = Rubric.objects.all()
+    # rubrics = Rubric.objects.order_by_bb_count()
+    rubrics = Rubric.objects.order_by_bb_count()
+    # bbs = Bb.objects.all()
+    bbs = Bb.by_price.all()
     paginator = Paginator(bbs, 5)
 
     try:
@@ -237,13 +241,17 @@ def index(request, page=1):
     except PageNotAnInteger:
         bbs_paginator = paginator.get_page(paginator.num_pages)
 
-    context = {'rubrics': rubrics, 'page': bbs_paginator, 'bbs': bbs_paginator.object_list}
+    context = {'rubrics': rubrics,
+               'page': bbs_paginator,
+               'bbs': bbs_paginator.object_list,
+               'count_bb': count_bb()}
 
     return render(request, 'bboard/index.html', context)
 
 
 def by_rubric(request, rubric_id, **kwargs):
-    bbs = Bb.objects.filter(rubric=rubric_id)
+    # bbs = Bb.objects.filter(rubric=rubric_id)
+    bbs = Bb.by_price.filter(rubric=rubric_id)
     rubrics = Rubric.objects.all()
     current_rubric = Rubric.objects.get(pk=rubric_id)
     paginator = Paginator(bbs, 1)
