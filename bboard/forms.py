@@ -1,3 +1,4 @@
+from captcha.fields import CaptchaField
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm, modelform_factory, DecimalField
 from django import forms
@@ -43,6 +44,9 @@ class BbForm(forms.ModelForm):
                                     help_text='He забудьте задать рубрику!',
                                     widget=forms.widgets.Select(attrs={'size': 8}))
 
+    captcha = CaptchaField(label='Это каптча', error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
+                           generator='captcha.helpers.math_challenge')
+
     def clean_title(self):
         val = self.cleaned_data['title']
         if val == 'Прошлогодний снег':
@@ -81,3 +85,8 @@ class IceCreamForm(ModelForm):  # lesson_25_hw
     class Meta:
         model = IceCream
         fields = ('title', 'content', 'price', 'quantity', 'compound')
+
+
+class SearchForm(forms.Form):
+    keyword = forms.CharField(max_length=20, label='Искомое слово')
+    rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(), label='Рубрика')

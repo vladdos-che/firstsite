@@ -14,7 +14,7 @@ from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
 
-from bboard.forms import BbForm, IceCreamForm
+from bboard.forms import BbForm, IceCreamForm, SearchForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
@@ -463,7 +463,8 @@ def rubrics(request):
     #         rubric.delete()
 
     RubricFormSet = modelformset_factory(Rubric, fields=('name',),
-                                         can_delete=True, extra=3)  # extra=1 по умолчанию
+                                         can_delete=True, extra=3,  # extra=1 по умолчанию
+                                         min_num=5, validate_min=True)  # lesson_27_hw
 
     if request.method == 'POST':
         formset = RubricFormSet(request.POST)
@@ -501,3 +502,19 @@ def bbs(request, rubric_id):
 
     context = {'formset': formset, 'current_rubric': rubric}
     return render(request, 'bboard/bbs.html', context)
+
+
+def search(request):
+    if request.method == 'POST':
+        sf = SearchForm(request.POST)
+        if sf.is_valid():
+            keyword = sf.cleaned_data['keyword']
+            rubric_id = sf.cleaned_data['rubric'].pk
+            bbs = Bb.objects.filter(title__iregex=keyword,
+                                    rubric=rubric_id)
+            context = {'bbs': bbs, 'form': sf}
+            return render(request, 'bboard/search.html', context)
+    else:
+        sf = SearchForm()
+    context = {'form': sf}
+    return render(request, 'bboard/search.html', context)

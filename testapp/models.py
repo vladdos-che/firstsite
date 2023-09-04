@@ -54,11 +54,19 @@ class Hospital(models.Model):
     doctors = models.ManyToManyField('Doctor', through='Work', through_fields=('hospital', 'doctor'))
 
 
+class DoctorQuerySet(models.QuerySet):  # lesson_31_hw
+    def order_by_first_name(self):
+        return self.order_by('price')
+
+
 class Doctor(models.Model):
     first_name = models.CharField(max_length=30)
     past_name = models.CharField(max_length=30)
     full_name = models.CharField(max_length=90,
                                  default=f'{first_name} {past_name}')
+
+
+# doctors_by_name = Doctor.objects.all().order_by_first_name()  # lesson_31_hw
 
 
 class Work(models.Model):

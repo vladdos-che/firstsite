@@ -17,3 +17,7 @@ urlpatterns = [
         template_name='registration/password_changed.html'),
          name='password_change_done'),
 ]
+
+urlpatterns += [
+    path('captcha/', include('captcha.urls')),
+]

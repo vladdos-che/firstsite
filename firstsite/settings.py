@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'captcha',
+
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
     'authapp',
@@ -156,3 +158,12 @@ STATIC_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = 'index'
+
+# Настройки каптчи
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+# CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
+CAPTCHA_LENGTH = 6
+CAPTCHA_TIMEOUT = 1
+CAPTCHA_LETTER_ROTATION = (-15, 15)

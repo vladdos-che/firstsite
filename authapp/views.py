@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
@@ -37,8 +38,16 @@ def register(request):
     if request.method == 'POST':
         register_form = RegisterUserForm(data=request.POST)
 
-        if register_form.is_valid():
-            register_form.save()
+        if register_form.is_valid():  # lesson_31_hw
+            transaction.set_autocommit(False)
+            try:
+                register_form.save()
+            except:
+                transaction.rollback()
+            else:
+                transaction.commit()
+            finally:
+                transaction.set_autocommit(True)
             return HttpResponseRedirect(reverse('authapp:login'))
     else:
         register_form = RegisterUserForm()
