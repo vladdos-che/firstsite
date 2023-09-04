@@ -35,10 +35,8 @@ class BbForm(forms.ModelForm):
                             validators=[validators.RegexValidator(regex='^.{4,}$')],
                             error_messages={'invalid': 'Слишком короткое название товара!'})
 
-    # content = forms.CharField(label='Описание',
-    #                           widget=forms.widgets.Textarea(),
-    #                           validators=[validators.RegexValidator(regex='^.{30,}$')],   # lesson_26_hw
-    #                     error_messages={'invalid': 'Описание товара должно быть больше 30 символов!'})  # lesson_26_hw
+    content = forms.CharField(label='Описание',
+                              widget=forms.widgets.Textarea())
     price = forms.DecimalField(label='Цена', decimal_places=2)
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(),
                                     label='Рубрика',
@@ -63,7 +61,7 @@ class BbForm(forms.ModelForm):
 
     class Meta:
         model = Bb
-        fields = ('title', 'price', 'rubric')  # lesson_25_hw убрал content
+        fields = ('title', 'content', 'price', 'rubric')
 
 
 # class BbForm(forms.ModelForm):

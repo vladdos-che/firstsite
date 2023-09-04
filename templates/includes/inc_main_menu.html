@@ -2,7 +2,29 @@
 
 <nav>
     <a href="{% url 'index' %}">Главная</a>
-    <a href="{% url 'login' %}">Login</a>
+
+    {% if user.is_authenticated %}
+{#            <a href="{% url 'authapp:logout' %}">#}
+            <a href="{% url 'logout' %}">
+                Logout: {{ user.username }}
+            </a>
+    {% else %}
+{#        <a href="{% url 'authapp:login' %}">#}
+        <a href="{% url 'login' %}">
+            Login
+        </a>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+            <a href="{% url 'password_change' %}">Изменить пароль</a>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <a href="{% url 'rubrics' %}">Изменить рубрики</a>
+        {% endif %}
+    {% endif %}
+
     <a href="{% url 'add' %}">Добавить</a>
     <a href="{% url 'add_icecream' %}">Добавить мороженое</a>  {# lesson_25_hw #}
     {% for rubric in rubrics %}

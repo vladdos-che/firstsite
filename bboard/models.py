@@ -24,11 +24,34 @@ def validate_even(val):
 #                                   params={'min': self.min_value, 'max': self.max_value})
 
 
+class RubricQuerySet(models.QuerySet):
+    def order_by_bb_count(self):
+        return self.annotate(cnt=models.Count('bb')).order_by('-cnt')
+
+
+class RubricManager(models.Manager):
+    def get_queryset(self):
+        # return super().get_queryset().order_by('name')
+        return RubricQuerySet(self.model, using=self._db)
+
+    def order_by_bb_count(self):
+        # return super().get_queryset().annotate(
+        #     cnt=models.Count('bb')
+        # ).order_by('-cnt')
+        return self.get_queryset().order_by_bb_count()
+
+
 class Rubric(models.Model):
     name = models.CharField(
         max_length=20,
         db_index=True,
         verbose_name="Название",)
+
+    # objects = RubricManager()
+    # objects = RubricQuerySet.as_manager()
+    objects = models.Manager.from_queryset(RubricQuerySet)()
+
+    # bbs = RubricManager()
 
     def __str__(self):
         return self.name
@@ -47,13 +70,18 @@ class Rubric(models.Model):
     def delete(self, *args, **kwargs):
         # Выполняем действия до удаления
         if True:
-            super().save(*args, **kwargs)
+            super().delete(*args, **kwargs)
         # Выполняем действия после удаления
 
     class Meta:
         verbose_name = 'Рубрика'
         verbose_name_plural = 'Рубрики'
         ordering = ['name']
+
+
+class BbManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('price')
 
 
 class Bb(models.Model):
@@ -102,6 +130,9 @@ class Bb(models.Model):
         db_index=True,
         verbose_name="Опубликовано",
     )
+
+    objects = models.Manager()
+    by_price = BbManager()
 
     def __str__(self):
         return f'Объявление: {self.title}'

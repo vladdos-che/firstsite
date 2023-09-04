@@ -1,5 +1,8 @@
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Min, Max, Count, Q, Sum, IntegerField, Avg
+from django.forms import modelformset_factory, inlineformset_factory
 from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.template.loader import get_template, render_to_string
@@ -48,10 +51,18 @@ class BbCreateView(CreateView):
         return context
 
 
-class BbAddView(FormView):
+# class BbAddView(FormView):
+# class BbAddView(LoginRequiredMixin, FormView):
+class BbAddView(UserPassesTestMixin, FormView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     initial = {'price': 0.0}
+
+    # Start For UserPassesTestMixin
+    def test_func(self):
+        return self.request.user.is_staff
+
+    # End For UserPassesTestMixin
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -190,7 +201,8 @@ class BbIndexView(ArchiveIndexView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['rubrics'] = Rubric.objects.all()
+        # context['rubrics'] = Rubric.objects.all()
+        context['rubrics'] = Rubric.objects.order_by_bb_count()
         return context
 
 
@@ -215,8 +227,11 @@ class BbIndexRedirectView(RedirectView):
 
 
 def index(request, page=1):
-    rubrics = Rubric.objects.all()
-    bbs = Bb.objects.all()
+    # rubrics = Rubric.objects.all()
+    # rubrics = Rubric.objects.order_by_bb_count()
+    rubrics = Rubric.objects.order_by_bb_count()
+    # bbs = Bb.objects.all()
+    bbs = Bb.by_price.all()
     paginator = Paginator(bbs, 5)
 
     try:
@@ -226,13 +241,17 @@ def index(request, page=1):
     except PageNotAnInteger:
         bbs_paginator = paginator.get_page(paginator.num_pages)
 
-    context = {'rubrics': rubrics, 'page': bbs_paginator, 'bbs': bbs_paginator.object_list}
+    context = {'rubrics': rubrics,
+               'page': bbs_paginator,
+               'bbs': bbs_paginator.object_list,
+               'count_bb': count_bb()}
 
     return render(request, 'bboard/index.html', context)
 
 
 def by_rubric(request, rubric_id, **kwargs):
-    bbs = Bb.objects.filter(rubric=rubric_id)
+    # bbs = Bb.objects.filter(rubric=rubric_id)
+    bbs = Bb.by_price.filter(rubric=rubric_id)
     rubrics = Rubric.objects.all()
     current_rubric = Rubric.objects.get(pk=rubric_id)
     paginator = Paginator(bbs, 1)
@@ -423,3 +442,62 @@ class IceCreamCreateView(CreateView):  # lesson_25_hw
     template_name = 'bboard/icecream_create.html'
     form_class = IceCreamForm
     success_url = '/'
+
+
+@permission_required(('bboard.add_rubriс', 'bboard.change_rubric', 'bboard.delete_rubric'))
+@user_passes_test(lambda user: user.is_staff)
+@login_required
+def rubrics(request):
+    # RubricFromSet = modelformset_factory(Rubric, fields=('name',),
+    #                                      can_order=True, can_delete=True)
+    #
+    # formset = RubricFromSet(initial=[{'name': 'Новая рубрика'}],
+    #                         qweryset=Rubric.objects.all()[0:5])
+    #
+    # formset = RubricFromSet(request.POST)
+    #
+    # if formset.is_valid():
+    #     # formset.save()
+    #     formset.save(commit=False)
+    #     for rubric in formset.deleted_objects:
+    #         rubric.delete()
+
+    RubricFormSet = modelformset_factory(Rubric, fields=('name',),
+                                         can_delete=True, extra=3)  # extra=1 по умолчанию
+
+    if request.method == 'POST':
+        formset = RubricFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return redirect('index')
+    else:
+        formset = RubricFormSet()
+
+    context = {'formset': formset}
+    return render(request, 'bboard/rubrics.html', context)
+
+
+def bbs(request, rubric_id):
+    # if request.user.has_perm('bboard.delete_bb'):  # request.user.has_perms  # lesson_28
+    #     pass
+
+    # request.user.get_user_permissions()  # lesson_28
+    # request.user.get_group_permissions()  # lesson_28
+    # request.user.get_all_permissions()  # lesson_28
+
+    # User.objects.with_perm('bboard.add_bb', include_superusers=False)  # lesson_28
+
+    BbsFormSet = inlineformset_factory(Rubric, Bb, form=BbForm, extra=1)  # extra=3 по умолчанию
+    rubric = Rubric.objects.get(pk=rubric_id)
+
+    if request.method == 'POST':
+        formset = BbsFormSet(request.POST, instance=rubric)
+
+        if formset.is_valid():
+            formset.save()
+            return redirect('index')
+    else:
+        formset = BbsFormSet(instance=rubric)
+
+    context = {'formset': formset, 'current_rubric': rubric}
+    return render(request, 'bboard/bbs.html', context)
