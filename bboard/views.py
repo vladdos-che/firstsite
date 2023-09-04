@@ -463,7 +463,8 @@ def rubrics(request):
     #         rubric.delete()
 
     RubricFormSet = modelformset_factory(Rubric, fields=('name',),
-                                         can_delete=True, extra=3)  # extra=1 по умолчанию
+                                         can_delete=True, extra=3,  # extra=1 по умолчанию
+                                         min_num=5, validate_min=True)  # lesson_27_hw
 
     if request.method == 'POST':
         formset = RubricFormSet(request.POST)
