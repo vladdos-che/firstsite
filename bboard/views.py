@@ -13,6 +13,7 @@ from django.views.generic import TemplateView, RedirectView
 from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
+from precise_bbcode.bbcode import get_parser
 
 from bboard.forms import BbForm, IceCreamForm, SearchForm
 from bboard.models import Bb, Rubric
@@ -406,6 +407,10 @@ class BbDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # parser = get_parser()
+        # context['parsed_content'] = parser.render(context['bb'].content)
+
         context['rubrics'] = Rubric.objects.all()
         context['bbs'] = get_list_or_404(Bb, rubric=context['bb'].rubric)
         return context

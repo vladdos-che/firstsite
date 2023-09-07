@@ -39,7 +39,8 @@
                     {{ bb.title_and_price|lower|title }}
                 </a>
             </h2>
-            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}
+{#            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}#}
+            <p>Описание: {{ bb.content.rendered|lower|capfirst }}</p>  {# lesson_34 #}
             <p><a href="{{ bb.rubric.get_absolute_url }}">
                 {{ bb.rubric.name|upper }}</a></p>
             <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
