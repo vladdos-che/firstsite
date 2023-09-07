@@ -1,0 +1,47 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}
+    {{ current_rubric.name }}
+{% endblock %}
+
+{% block content %}
+    <p>
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">&lt;</a>
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+        {% else %}
+            <a>&lt;</a>
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+        {% endif %}
+
+        {% for i in page.paginator.page_range %}
+            {% if page.number == i %}
+                <a>{{ i }}</a>
+            {% else %}
+                <a href="?page={{ i }}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page.has_next %}
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+            <a href="?page={{ page.next_page_number }}">&gt;</a>
+        {% else %}
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+            <a>&gt;</a>
+        {% endif %}
+    </p>
+
+    <h1>{{ kwargs.name }}</h1>
+    <h2>Рубрика: {{ current_rubric.name }}</h2>
+    {% for bb in bbs %}
+        <div>
+            <h2><a href="{% url 'detail' pk=bb.pk %}">
+                    {{ bb.title_and_price }}
+                </a></h2>
+            <p>{{ bb.content }}</p>
+            <p><a href="{{ bb.rubric.get_absolute_url }}">
+                {{ bb.rubric.name }}</a></p>
+            <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

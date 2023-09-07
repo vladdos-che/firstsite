@@ -1,0 +1,10 @@
+{% extends "layout/basic.html" %}
+
+{% block content %}
+    <a href="{% url 'index_sms' %}">Главная</a>
+
+    <h2>Сообщение:</h2>
+    <p>От: {{ sms.sender }}</p>
+    <p>Для: {{ sms.receiver }}</p>
+    <p>{{ sms.comment }}</p>
+{% endblock %}
