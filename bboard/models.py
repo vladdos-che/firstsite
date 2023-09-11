@@ -1,6 +1,7 @@
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
+from precise_bbcode.fields import BBCodeTextField
 
 
 def get_min_length():
@@ -112,7 +113,8 @@ class Bb(models.Model):
         default='s',
     )
 
-    content = models.TextField(
+    # content = models.TextField(
+    content = BBCodeTextField(
         null=True,
         blank=True,
         verbose_name="Описание",

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'captcha',
+    'precise_bbcode',
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
@@ -165,10 +166,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATIC_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 # Default primary key field type
@@ -186,3 +187,5 @@ CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.random_char_challenge'
 CAPTCHA_LENGTH = 6
 CAPTCHA_TIMEOUT = 1
 CAPTCHA_LETTER_ROTATION = (-15, 15)
+
+BBCODE_SMILIES_UPLOAD_TO = 'static/precise_bbcode/smiles'
