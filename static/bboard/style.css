@@ -33,3 +33,7 @@ section {
 #login_confirmed {
     display: none;
 }
+
+.width-control {
+    width: 600px;
+}
