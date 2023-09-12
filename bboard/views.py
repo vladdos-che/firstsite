@@ -13,8 +13,9 @@ from django.views.generic import TemplateView, RedirectView
 from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
+from precise_bbcode.bbcode import get_parser
 
-from bboard.forms import BbForm, IceCreamForm
+from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
@@ -406,6 +407,10 @@ class BbDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # parser = get_parser()
+        # context['parsed_content'] = parser.render(context['bb'].content)
+
         context['rubrics'] = Rubric.objects.all()
         context['bbs'] = get_list_or_404(Bb, rubric=context['bb'].rubric)
         return context
@@ -502,3 +507,24 @@ def bbs(request, rubric_id):
 
     context = {'formset': formset, 'current_rubric': rubric}
     return render(request, 'bboard/bbs.html', context)
+
+
+def search(request):
+    if request.method == 'POST':
+        sf = SearchForm(request.POST)
+        if sf.is_valid():
+            keyword = sf.cleaned_data['keyword']
+            rubric_id = sf.cleaned_data['rubric'].pk
+            bbs = Bb.objects.filter(title__iregex=keyword,
+                                    rubric=rubric_id)
+            context = {'bbs': bbs, 'form': sf}
+            return render(request, 'bboard/search.html', context)
+    else:
+        sf = SearchForm()
+    context = {'form': sf}
+    return render(request, 'bboard/search.html', context)
+
+
+class CaptchaLibraryView(FormView):  # lesson_32_hw
+    template_name = 'bboard/captcha_library.html'
+    form_class = CaptchaLibraryForm
