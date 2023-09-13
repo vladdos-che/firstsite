@@ -1,0 +1,14 @@
+{% extends "layout/basic.html" %}  {# lesson_32_hw #}
+
+{% block title %}Библиотека каптчи{% endblock %}
+
+{% block content %}
+    <h2>Библиотека каптчи</h2>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+
+    <a href="{% url 'index' %}">Главная</a>
+{% endblock %}

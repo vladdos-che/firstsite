@@ -90,3 +90,12 @@ class IceCreamForm(ModelForm):  # lesson_25_hw
 class SearchForm(forms.Form):
     keyword = forms.CharField(max_length=20, label='Искомое слово')
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(), label='Рубрика')
+
+
+class CaptchaLibraryForm(forms.Form):  # lesson_32_hw
+    math_captcha = CaptchaField(label='Это математическая каптча',
+                                error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
+                                generator='captcha.helpers.math_challenge')
+    alphabet_captcha = CaptchaField(label='Это каптча из букв',
+                                    error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
+                                    generator='captcha.helpers.random_char_challenge')
