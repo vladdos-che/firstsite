@@ -81,7 +81,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'BACKEND': 'django.template.backends.jinja2.Jinja2',
         # 'NAME': "",
-        'DIRS': [BASE_DIR / 'templates'],
+        # 'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': False,
         # 'debug': False,
         'OPTIONS': {
@@ -99,6 +100,13 @@ TEMPLATES = [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
             ],
+            # 'libraries': {
+            #     'filtersandtags': 'bboard.filtersandtags',
+            #     'ft': 'bboard.filtersandtags',
+            # },
+            # 'builtins': [
+            #     'bboard.filtersandtags',
+            # ],
         },
     },
 ]

@@ -1,5 +1,6 @@
 {% extends "layout/basic.html" %}
 {% load bootstrap4 %}
+{% load filtersandtags %}
 
 {% block content %}
 
@@ -44,6 +45,10 @@
             </h2>
 {#            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}#}
             <p>Описание: {{ bb.content.rendered|lower|capfirst }}</p>  {# lesson_34 #}
+
+            <p>Цена: {{ bb.price|cur }}</p>  {# lesson_36 #}
+            <p>Цена: {{ bb.price|cur:'tng.' }}</p>  {# lesson_36 #}
+
             <p><a href="{{ bb.rubric.get_absolute_url }}">
                 {{ bb.rubric.name|upper }}</a></p>
             <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
@@ -55,5 +60,9 @@
         {{ d.year }}
         {% endfor %}
     </p>
+
+    <div>{% lst ' | ' '1' '2' '3' %}</div>
+
+    <div>{% ulist '1' '2' '3' %}</div>
 
 {% endblock %}
