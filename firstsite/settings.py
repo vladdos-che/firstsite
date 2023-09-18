@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'captcha',
     'precise_bbcode',
+    'django_cleanup',
+    'easy_thumbnails',
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
@@ -117,27 +119,27 @@ WSGI_APPLICATION = 'firstsite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#         # 'ATOMIC_REQUEST': False,
-#         # 'AUTOCOMMIT': True,
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "firstsite",
-        # "USER": "postgres",
-        # "PASSWORD": "gg356g",
-        # "HOST": "127.0.0.1",
-        # "PORT": "5432",
-        "USER": env('USER'),
-        "PASSWORD": env('PASSWORD'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ATOMIC_REQUEST': False,
+        # 'AUTOCOMMIT': True,
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "firstsite",
+#         # "USER": "postgres",
+#         # "PASSWORD": "gg356g",
+#         # "HOST": "127.0.0.1",
+#         # "PORT": "5432",
+#         "USER": env('USER'),
+#         "PASSWORD": env('PASSWORD'),
+#     }
+# }
 
 
 # Password validation
@@ -201,3 +203,31 @@ BBCODE_SMILIES_UPLOAD_TO = 'static/precise_bbcode/smiles'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+THUMBNAIL_ALIASES = {
+    'bboard.Bb.picture': {
+        'default': {
+            'size': (500, 300),
+            'crop': 'scale',
+        },
+    },
+    'testapp': {
+        'default': {
+            'size': (400, 300),
+            'crop': 'smart',
+            'bw': True,
+        },
+    },
+    '': {
+        'default': {
+            'size': (180, 240),
+            'crop': 'scale',
+        },
+        'big': {
+            'size': (480, 640),
+            'crop': '10,10',
+        },
+    },
+}
+THUMBNAIL_DEFAULT_OPTIONS = {'quality': 90, 'subsampling': 1, }
+THUMBNAIL_BASEDIR = 'thumbs'

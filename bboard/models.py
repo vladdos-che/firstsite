@@ -141,7 +141,8 @@ class Bb(models.Model):
         verbose_name="Опубликовано",
     )
 
-    archive = models.FileField(
+    # archive = models.FileField(
+    picture = models.ImageField(
         # upload_to='archives/',
         # upload_to='archives/%Y/%m/%d/',
         upload_to=get_timestamp_path,

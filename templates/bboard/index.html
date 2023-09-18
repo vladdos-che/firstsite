@@ -43,6 +43,7 @@
                     {{ bb.title_and_price|lower|title }}
                 </a>
             </h2>
+
 {#            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}#}
             <p>Описание: {{ bb.content.rendered|lower|capfirst }}</p>  {# lesson_34 #}
 
