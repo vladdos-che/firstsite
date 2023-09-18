@@ -47,6 +47,8 @@ class BbForm(forms.ModelForm):
     captcha = CaptchaField(label='Это каптча', error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
                            generator='captcha.helpers.math_challenge')
 
+    archive = forms.FileField(label='Выберите файл', )
+
     def clean_title(self):
         val = self.cleaned_data['title']
         if val == 'Прошлогодний снег':
@@ -65,7 +67,8 @@ class BbForm(forms.ModelForm):
 
     class Meta:
         model = Bb
-        fields = ('title', 'content', 'price', 'rubric')
+        # fields = ('title', 'content', 'price', 'rubric')
+        fields = ('title', 'content', 'price', 'rubric', 'archive')
 
 
 # class BbForm(forms.ModelForm):

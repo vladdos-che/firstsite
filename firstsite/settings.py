@@ -198,3 +198,6 @@ CAPTCHA_TIMEOUT = 1
 CAPTCHA_LETTER_ROTATION = (-15, 15)
 
 BBCODE_SMILIES_UPLOAD_TO = 'static/precise_bbcode/smiles'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

@@ -2,6 +2,8 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.db import models
 from precise_bbcode.fields import BBCodeTextField
+from datetime import datetime
+from os.path import splitext
 
 
 def get_min_length():
@@ -23,6 +25,12 @@ def validate_even(val):
 #         if val < self.min_value or val > self.max_value:
 #             raise ValidationError('Введёное чило должно быть > %(min)s и < %(max)s', code='out_of_range',
 #                                   params={'min': self.min_value, 'max': self.max_value})
+
+
+def get_timestamp_path(instance, filename):
+    return '%s%s%s' % (splitext(filename)[0],
+                       datetime.now().timestamp(),
+                       splitext(filename)[1])
 
 
 class RubricQuerySet(models.QuerySet):
@@ -131,6 +139,13 @@ class Bb(models.Model):
         auto_now_add=True,
         db_index=True,
         verbose_name="Опубликовано",
+    )
+
+    archive = models.FileField(
+        # upload_to='archives/',
+        # upload_to='archives/%Y/%m/%d/',
+        upload_to=get_timestamp_path,
+        blank=True,
     )
 
     objects = models.Manager()
