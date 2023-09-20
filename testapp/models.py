@@ -81,6 +81,11 @@ class Note(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey(ct_field='content_type', fk_field='object_id')
 
+    class Meta:
+        permissions = (
+            ('hide_comments', 'Можно скрывать комментарии'),
+        )
+
 
 # class Message(models.Model):
 #     content = models.TextField()
