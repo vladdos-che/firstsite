@@ -15,7 +15,7 @@ from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteVi
 from django.urls import reverse
 from precise_bbcode.bbcode import get_parser
 
-from bboard.forms import BbForm, IceCreamForm, SearchForm
+from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
@@ -523,3 +523,8 @@ def search(request):
         sf = SearchForm()
     context = {'form': sf}
     return render(request, 'bboard/search.html', context)
+
+
+class CaptchaLibraryView(FormView):  # lesson_32_hw
+    template_name = 'bboard/captcha_library.html'
+    form_class = CaptchaLibraryForm

@@ -47,6 +47,8 @@ class BbForm(forms.ModelForm):
     captcha = CaptchaField(label='Это каптча', error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
                            generator='captcha.helpers.math_challenge')
 
+    picture = forms.FileField(label='Выберите файл', )
+
     def clean_title(self):
         val = self.cleaned_data['title']
         if val == 'Прошлогодний снег':
@@ -65,7 +67,8 @@ class BbForm(forms.ModelForm):
 
     class Meta:
         model = Bb
-        fields = ('title', 'content', 'price', 'rubric')
+        # fields = ('title', 'content', 'price', 'rubric')
+        fields = ('title', 'content', 'price', 'rubric', 'picture')
 
 
 # class BbForm(forms.ModelForm):
@@ -90,3 +93,12 @@ class IceCreamForm(ModelForm):  # lesson_25_hw
 class SearchForm(forms.Form):
     keyword = forms.CharField(max_length=20, label='Искомое слово')
     rubric = forms.ModelChoiceField(queryset=Rubric.objects.all(), label='Рубрика')
+
+
+class CaptchaLibraryForm(forms.Form):  # lesson_32_hw
+    math_captcha = CaptchaField(label='Это математическая каптча',
+                                error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
+                                generator='captcha.helpers.math_challenge')
+    alphabet_captcha = CaptchaField(label='Это каптча из букв',
+                                    error_messages={'invalid': 'Глаз нет что ли? Инвалид?'},
+                                    generator='captcha.helpers.random_char_challenge')

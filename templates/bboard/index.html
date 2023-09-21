@@ -1,6 +1,10 @@
 {% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% load filtersandtags %}
 
 {% block content %}
+
+    {{ groups_this_user }}
 
 {#    <p>#}
 {#        {% if page.has_previous %}#}
@@ -26,6 +30,8 @@
         {% endif %}
     </p>
 
+{#    {% bootstrap_pagination page size='small' %}#}
+
     <p>Количество записей: {{ page.paginator.num_pages }}</p>
 
     <p>{{ block.super }}</p>
@@ -39,8 +45,19 @@
                     {{ bb.title_and_price|lower|title }}
                 </a>
             </h2>
+
 {#            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}#}
             <p>Описание: {{ bb.content.rendered|lower|capfirst }}</p>  {# lesson_34 #}
+
+            <p>Описание: {% str_to_list bb.content.rendered ", " %}</p>  {# lesson_36_hw #}
+            <p style="color: red">Описание: {% content_to_words bb.content.rendered %}</p>  {# lesson_36_hw #}
+
+            <p>Цена: {{ bb.price|cur }}</p>  {# lesson_36 #}
+            <p>Цена: {{ bb.price|cur:'tng.' }}</p>  {# lesson_36 #}
+
+            <p>Цена в долларах: {{ bb.price|tng_to_dollars }}</p>  {# lesson_36_hw #}
+            <p>Цена из долларов в тенге: {{ bb.price|dollars_to_tng }}</p>  {# lesson_36_hw #}
+
             <p><a href="{{ bb.rubric.get_absolute_url }}">
                 {{ bb.rubric.name|upper }}</a></p>
             <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
@@ -52,5 +69,9 @@
         {{ d.year }}
         {% endfor %}
     </p>
+
+    <div>{% lst ' | ' '1' '2' '3' %}</div>
+
+    <div>{% ulist '1' '2' '3' %}</div>
 
 {% endblock %}
