@@ -7,15 +7,15 @@
     <h2>Добавление объявления</h2>
 
     {% if form.is_multipart %}
-        <form class="col-md-4" action="" method="post" enctype="multipart/form-data">
+        <form class="" action="" method="post" enctype="multipart/form-data">
     {% else %}
-        <form class="col-md-4" action="" method="post">
+        <form class="" action="" method="post">
     {% endif %}
 {#    <form action="{% url 'add_save' %}" method="post">#}
 {#    <form method="post" class="col-md-4">#}
         {% csrf_token %}
         {# быстрый вариант #}
-{#        {{ form.as_p }} {# <ul> {{ form.as_ul }} </ul>  #}#}
+{#        {{ form.as_p }} {# <ul> {{ form.as_ul }} </ul>  #}
 
         {# расширенный вариант #}
 {#        {% for hidden in form.hidden_fields %}#}

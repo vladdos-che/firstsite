@@ -37,6 +37,9 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # Application definition
 
@@ -48,9 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'debug_toolbar',
     'bootstrap4',
     'captcha',
     'precise_bbcode',
+    'django_cleanup',
+    'easy_thumbnails',
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
@@ -66,6 +72,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
+    # 'bboard.middlewares.my_middleware',
+    # 'bboard.middlewares.MyMiddleware',
+    # 'bboard.middlewares.RubricsMiddleware',
 ]
 
 ROOT_URLCONF = 'firstsite.urls'
@@ -81,7 +93,8 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'BACKEND': 'django.template.backends.jinja2.Jinja2',
         # 'NAME': "",
-        'DIRS': [BASE_DIR / 'templates'],
+        # 'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': False,
         # 'debug': False,
         'OPTIONS': {
@@ -94,11 +107,20 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',
+
+                'bboard.context_pocessors.rubrics',
             ],
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
             ],
+            # 'libraries': {
+            #     'filtersandtags': 'bboard.filtersandtags',
+            #     'ft': 'bboard.filtersandtags',
+            # },
+            # 'builtins': [
+            #     'bboard.filtersandtags',
+            # ],
         },
     },
 ]
@@ -109,27 +131,27 @@ WSGI_APPLICATION = 'firstsite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#         # 'ATOMIC_REQUEST': False,
-#         # 'AUTOCOMMIT': True,
-#     }
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "firstsite",
-        # "USER": "postgres",
-        # "PASSWORD": "gg356g",
-        # "HOST": "127.0.0.1",
-        # "PORT": "5432",
-        "USER": env('USER'),
-        "PASSWORD": env('PASSWORD'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ATOMIC_REQUEST': False,
+        # 'AUTOCOMMIT': True,
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "firstsite",
+#         # "USER": "postgres",
+#         # "PASSWORD": "gg356g",
+#         # "HOST": "127.0.0.1",
+#         # "PORT": "5432",
+#         "USER": env('USER'),
+#         "PASSWORD": env('PASSWORD'),
+#     }
+# }
 
 
 # Password validation
@@ -138,15 +160,22 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'OPTIONS': {'max_similarity': 0.7},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 8},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        # 'OPTIONS': {'password_list_pass': 'какой-то путь'},
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'firstsite.validators.NoForbiddenCharsValidator',
+        'OPTIONS': {'forbidden_chars': (' ', ',', '.', ':', ';')},
     },
 ]
 
@@ -190,3 +219,41 @@ CAPTCHA_TIMEOUT = 1
 CAPTCHA_LETTER_ROTATION = (-15, 15)
 
 BBCODE_SMILIES_UPLOAD_TO = 'static/precise_bbcode/smiles'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+THUMBNAIL_ALIASES = {
+    'bboard.Bb.picture': {
+        'default': {
+            'size': (500, 300),
+            'crop': 'scale',
+        },
+    },
+    'testapp': {
+        'default': {
+            'size': (400, 300),
+            'crop': 'smart',
+            'bw': True,
+        },
+    },
+    '': {
+        'default': {
+            'size': (180, 240),
+            'crop': 'scale',
+        },
+        'big': {
+            'size': (480, 640),
+            'crop': '10,10',
+        },
+    },
+}
+THUMBNAIL_DEFAULT_OPTIONS = {'quality': 90, 'subsampling': 1, }
+THUMBNAIL_BASEDIR = 'thumbs'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
+MESSAGE_LEVEL = 20
+# from django.contrib import messages
+# MESSAGE_LEVEL = messages.DEBUG

@@ -2,8 +2,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 
-from bboard.models import Rubric
+from bboard.models import Rubric, get_timestamp_path
 
 
 class AdvUser(models.Model):
@@ -80,6 +81,11 @@ class Note(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey(ct_field='content_type', fk_field='object_id')
 
+    class Meta:
+        permissions = (
+            ('hide_comments', 'Можно скрывать комментарии'),
+        )
+
 
 # class Message(models.Model):
 #     content = models.TextField()
@@ -113,3 +119,17 @@ class RevRubric(Rubric):
     class Meta:
         proxy = True
         ordering = ['-name']
+
+
+class Img(models.Model):
+    img = models.ImageField(
+        verbose_name='Изображение',
+        upload_to=get_timestamp_path,
+        validators=[FileExtensionValidator(allowed_extensions=('jpg', 'png', 'gif'))]
+    )
+
+    desc = models.TextField(verbose_name='Описание')
+
+    class Meta:
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'

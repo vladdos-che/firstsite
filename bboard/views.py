@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Min, Max, Count, Q, Sum, IntegerField, Avg
 from django.forms import modelformset_factory, inlineformset_factory
@@ -19,6 +20,8 @@ from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
+
+from bboard.signals import add_bb
 
 
 def count_bb():
@@ -54,10 +57,11 @@ class BbCreateView(CreateView):
 
 # class BbAddView(FormView):
 # class BbAddView(LoginRequiredMixin, FormView):
-class BbAddView(UserPassesTestMixin, FormView):
+class BbAddView(SuccessMessageMixin, UserPassesTestMixin, FormView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     initial = {'price': 0.0}
+    # success_message = 'Объявление о продаже товара "% (title)s" создано.'
 
     # Start For UserPassesTestMixin
     def test_func(self):
@@ -242,12 +246,29 @@ def index(request, page=1):
     except PageNotAnInteger:
         bbs_paginator = paginator.get_page(paginator.num_pages)
 
+    # if 'counter' in request.COOKIES:
+    #     cnt = int(request.COOKIES['counter']) + 1
+    # else:
+    #     cnt = 1
+
+    if 'counter' in request.session:
+        cnt = request.session['counter'] + 1
+    else:
+        cnt = 1
+
     context = {'rubrics': rubrics,
                'page': bbs_paginator,
                'bbs': bbs_paginator.object_list,
-               'count_bb': count_bb()}
+               'count_bb': count_bb(),
+               'cnt': cnt}
 
-    return render(request, 'bboard/index.html', context)
+    request.session['counter'] = cnt
+    response = HttpResponse(render(request, 'bboard/index.html', context))
+    # response.set_cookie('counter', cnt)
+
+    # response.delete_cookie('counter')
+
+    return response
 
 
 def by_rubric(request, rubric_id, **kwargs):
@@ -335,20 +356,6 @@ class BbByRubricByDateView(ArchiveIndexView):  # lesson_20_hw
 #         return context
 
 
-def login(request):  # Моё не нужное
-    rubrics = Rubric.objects.all()
-    context = {
-        'rubrics': rubrics,
-        'count_bb': count_bb(),
-
-    }
-
-    logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w", encoding='utf-8')  # lesson_16_hw
-    logging.info(request)
-
-    return render(request, 'bboard/login.html', context)
-
-
 class BbLoginRedirectView(RedirectView):  # lesson_16_hw
     url = '/'
 
@@ -428,6 +435,7 @@ class BbEditView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
+        add_bb.send(sender=self.object)
         return context
 
 

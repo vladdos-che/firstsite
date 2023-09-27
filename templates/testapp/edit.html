@@ -1,0 +1,30 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Изменение изображения{% endblock %}
+
+{% block content %}
+    <h2>Изменение изображения</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                        УРА!!!
+                    {% endif %}
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div>
+        <img src="{{ img.img.url }}" alt="Картинка">
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="col-md-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Отправить">
+    </form>
+{% endblock %}
