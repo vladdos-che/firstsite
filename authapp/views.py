@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.urls import reverse
-from django.views.generic import ListView, FormView, TemplateView
+from django.views.generic import ListView, FormView, TemplateView, RedirectView
 from django.urls import reverse_lazy
 
 from authapp.forms import UserLoginForm, UserViewForm, RegisterUserForm
@@ -63,6 +63,10 @@ def register(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('index'))
+
+
+class PasswordChangeRedirectView(RedirectView):
+    url = reverse_lazy('password_change')
 
 
 # def user_view(request):

@@ -37,8 +37,6 @@ urlpatterns = [
     # path('add/', add_and_save, name='add'),
     path('update/<int:pk>/', BbEditView.as_view(), name='update'),
 
-    path('loginme/', BbLoginRedirectView.as_view(), name='login_me'),  # lesson_16_hw
-
     path('read/<int:rec_id>/', BbDetailView.as_view(), name='read'),
 
     path('<int:year>/<int:month>/', BbMonthArchiveView.as_view()),
