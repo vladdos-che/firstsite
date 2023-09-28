@@ -237,6 +237,13 @@ class IceCream(models.Model):
         default=0,
     )
 
+    compound_doc = models.FileField(  # lesson_37_hw
+        upload_to=get_timestamp_path,
+        blank=True,
+        null=True,
+        verbose_name='Документ с полным рецептом',
+    )
+
     def __str__(self):
         return f'Мороженое: {self.title}'
 

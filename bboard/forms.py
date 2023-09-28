@@ -87,7 +87,7 @@ class BbForm(forms.ModelForm):
 class IceCreamForm(ModelForm):  # lesson_25_hw
     class Meta:
         model = IceCream
-        fields = ('title', 'content', 'price', 'quantity', 'compound')
+        fields = ('title', 'content', 'price', 'quantity', 'compound', 'compound_doc')
 
 
 class SearchForm(forms.Form):
