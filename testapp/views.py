@@ -1,6 +1,7 @@
 import os.path
 from datetime import datetime
 from django.contrib import messages
+from django.core.mail import send_mail
 
 from django.db import transaction
 from django.http import FileResponse, HttpResponse
@@ -175,3 +176,15 @@ def test_cookie(request):
 
     request.session.set_test_cookie()
     return render(request, 'testapp/test_cookie.html')
+
+
+def test_mail(request):
+    title = 'Test2'
+    message = 'Test2!!!'
+    em_from = 'webmaster@supersite.ru'
+    em_to = ['user@othersite.ru']
+    html_mes = '<h1>!!! TEXT2 !!!</h1>'
+
+    send_mail(title, message, em_from, em_to, html_message=html_mes, fail_silently=False)
+
+    return redirect('testapp:index')

@@ -257,3 +257,15 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 MESSAGE_LEVEL = 20
 # from django.contrib import messages
 # MESSAGE_LEVEL = messages.DEBUG
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_USE_LOCALE = True
+EMAIL_FILE_PATH = 'tmp/messages'
+
+ADMINS = [
+    ('Admin1', 'admin1@supersite.ru'),
+    ('Admin2', 'admin2@othersite.ru'),
+    ('MegaAdmin', 'megaadmin@megasite.ru'),
+]
