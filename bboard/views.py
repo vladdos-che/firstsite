@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse, StreamingHttpRespons
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse_lazy
+from django.views.decorators.cache import cache_page
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView, RedirectView
@@ -231,12 +232,12 @@ class BbIndexRedirectView(RedirectView):
 #     return render(request, 'bboard/index.html', context)
 
 
+@cache_page(60 * 1)
 def index(request, page=1):
     # rubrics = Rubric.objects.all()
-    # rubrics = Rubric.objects.order_by_bb_count()
     rubrics = Rubric.objects.order_by_bb_count()
     # bbs = Bb.objects.all()
-    bbs = Bb.by_price.all()
+    bbs = Bb.by_price.all().prefetch_related('rubric')
     paginator = Paginator(bbs, 5)
 
     try:
@@ -271,6 +272,7 @@ def index(request, page=1):
     return response
 
 
+@cache_page(60 * 1)
 def by_rubric(request, rubric_id, **kwargs):
     # bbs = Bb.objects.filter(rubric=rubric_id)
     bbs = Bb.by_price.filter(rubric=rubric_id)

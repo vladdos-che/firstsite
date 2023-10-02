@@ -1,6 +1,7 @@
 {% load static %}
 {#{% load count_bbs %}#}
 {% load bootstrap4 %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="ru" xmlns="">
@@ -22,7 +23,9 @@
         <h1>{% block h1 %} Объявления {% endblock %}</h1>
     </header>
 
+    {% cache 60 main_menu request.user.is_authenticated %}
     {% include 'includes/inc_main_menu.html' %}
+    {% endcache %}
 
     <p class="ml-3">Смотри! Колесо крутится!</p>
     <div class="ml-5 mb-5 spinner-border text-success" role="status">
