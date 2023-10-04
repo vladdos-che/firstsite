@@ -44,6 +44,17 @@
         </div>
     {% endif %}
 
+    {{ signer_message }}  {# lesson_41_hw #}
+    {% if messages %}  {# lesson_41_hw #}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <p>{{ block.super }}</p>
 
     {% for bb in bbs %}

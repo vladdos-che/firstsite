@@ -16,6 +16,8 @@ from django.views.generic.dates import ArchiveIndexView, MonthArchiveView
 from django.views.generic.edit import CreateView, FormView, UpdateView, DeleteView
 from django.urls import reverse
 from precise_bbcode.bbcode import get_parser
+from django.contrib import messages  # lesson_44_hw
+from django.core.signing import Signer  # lesson_44_hw
 
 from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
@@ -232,8 +234,12 @@ class BbIndexRedirectView(RedirectView):
 #     return render(request, 'bboard/index.html', context)
 
 
-@cache_page(60 * 1)
+# @cache_page(60 * 1)
 def index(request, page=1):
+    messages.add_message(request, 100, 'Случилось что-то очень хорошее! У нас всё получилось!')  # lesson_44_hw
+    signer = Signer()  # lesson_44_hw
+    signer_message = signer.sign('На что я подписался?!')  # lesson_44_hw
+
     # rubrics = Rubric.objects.all()
     rubrics = Rubric.objects.order_by_bb_count()
     # bbs = Bb.objects.all()
@@ -261,7 +267,8 @@ def index(request, page=1):
                'page': bbs_paginator,
                'bbs': bbs_paginator.object_list,
                'count_bb': count_bb(),
-               'cnt': cnt}
+               'cnt': cnt,
+               'signer_message': signer_message}
 
     request.session['counter'] = cnt
     response = HttpResponse(render(request, 'bboard/index.html', context))
@@ -272,7 +279,7 @@ def index(request, page=1):
     return response
 
 
-@cache_page(60 * 1)
+# @cache_page(60 * 1)
 def by_rubric(request, rubric_id, **kwargs):
     # bbs = Bb.objects.filter(rubric=rubric_id)
     bbs = Bb.by_price.filter(rubric=rubric_id)

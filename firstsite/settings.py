@@ -260,6 +260,9 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 MESSAGE_LEVEL = 20
 # from django.contrib import messages
 # MESSAGE_LEVEL = messages.DEBUG
+MESSAGE_TAGS = {
+    100: 'text-warning',  # lesson_44_hw
+}
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -311,5 +314,3 @@ CACHES = {
 #
 # SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # SESSION_CACHE_ALIAS = "default"
-
-
