@@ -12,21 +12,15 @@ from django.views.generic import CreateView, DetailView, ListView,\
     DeleteView, UpdateView
 
 from firstsite.settings import BASE_DIR
-from testapp.forms import SMSCreateForm, ImgForm
-from testapp.models import SMS, Img
+from testapp.forms import ImgForm
+from testapp.models import Img
 
 FILES_ROOT = os.path.join(BASE_DIR, 'files')
 
 
-def index_sms(request):
-    template = get_template('testapp/index.html')
-    return HttpResponse(template.render(request=request))
-
-
-class AddSms(CreateView):
-    template_name = 'testapp/create.html'
-    form_class = SMSCreateForm
-    success_url = reverse_lazy('index_sms')
+# def index_sms(request):
+#     template = get_template('testapp/index.html')
+#     return HttpResponse(template.render(request=request))
 
 
 def add(request):
@@ -88,25 +82,31 @@ def get(request, filename):
     return FileResponse(open(fn, 'rb'), content_type='application/octet-stream')
 
 
-class ReadSms(DetailView):
-    model = SMS
-    template_name = 'testapp/read.html'
+# class AddSms(CreateView):
+#     template_name = 'testapp/create.html'
+#     form_class = SMSCreateForm
+#     success_url = reverse_lazy('index_sms')
 
 
-class ReadListSms(ListView):
-    model = SMS
-    template_name = 'testapp/read.html'
-
-
-class DeleteSms(DeleteView):
-    model = SMS
-    success_url = reverse_lazy('index_sms')
-
-
-class UpdateSms(UpdateView):
-    template_name = 'testapp/create.html'
-    form_class = SMSCreateForm
-    success_url = reverse_lazy('index_sms')
+# class ReadSms(DetailView):
+#     model = SMS
+#     template_name = 'testapp/read.html'
+#
+#
+# class ReadListSms(ListView):
+#     model = SMS
+#     template_name = 'testapp/read.html'
+#
+#
+# class DeleteSms(DeleteView):
+#     model = SMS
+#     success_url = reverse_lazy('index_sms')
+#
+#
+# class UpdateSms(UpdateView):
+#     template_name = 'testapp/create.html'
+#     form_class = SMSCreateForm
+#     success_url = reverse_lazy('index_sms')
 
 
 # @transaction.non_atomic_requests

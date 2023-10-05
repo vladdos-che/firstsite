@@ -9,7 +9,6 @@ urlpatterns = [
     path('', include('bboard.urls')),
     path('auth/', include('authapp.urls', namespace='authapp')),
     path('testapp/', include('testapp.urls', namespace='testapp'), name='testapp'),
-    path('sheets/', include('tasksheet.urls')),
 
     path('accounts/login/', LoginView.as_view(next_page='index'), name='login'),
     # path('accounts/login/?next=index', LoginView.as_view(), name='login'),
@@ -18,7 +17,7 @@ urlpatterns = [
          name='password_change'),
     path('accounts/password_change/done/', PasswordChangeDoneView.as_view(
         template_name='registration/password_changed.html'),
-         name='password_change_done'),
+        name='password_change_done'),
 ]
 
 urlpatterns += [

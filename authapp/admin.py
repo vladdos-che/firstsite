@@ -1,4 +1,5 @@
 from django.contrib import admin
-from authapp.models import MyUser
 
-admin.site.register(MyUser)
+from authapp.models import BbUser
+
+admin.site.register(BbUser)

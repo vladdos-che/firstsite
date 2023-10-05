@@ -1,12 +1,12 @@
-from testapp.models import SMS, Img
+from testapp.models import Img
 from django import forms
 from django.core import validators
 
 
-class SMSCreateForm(forms.ModelForm):
-    class Meta:
-        model = SMS
-        fields = ('sender', 'receiver', 'comment')
+# class SMSCreateForm(forms.ModelForm):
+#     class Meta:
+#         model = SMS
+#         fields = ('sender', 'receiver', 'comment')
 
 
 class ImgForm(forms.ModelForm):
