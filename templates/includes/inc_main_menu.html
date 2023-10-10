@@ -12,14 +12,14 @@
 
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">
+                        <a class="nav-link" href="{% url 'authapp:logout' %}">
                             Logout: {{ user.username }}
                         </a>
                     </li>
                 {% else %}
                 {#        <a href="{% url 'authapp:login' %}">#}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
+                        <a class="nav-link" href="{% url 'authapp:login' %}">
                             Login
                         </a>
                     </li>
@@ -31,14 +31,14 @@
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
                         </div>
                         <div class="toast-body">
-                            Вы не вошли! Вход: <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            Вы не вошли! Вход: <a class="nav-link" href="{% url 'authapp:login' %}">Login</a>
                         </div>
                     </div>
                 {% endif %}
 
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'password_change' %}">
+                        <a class="nav-link" href="{% url 'authapp:change_password' %}">
                             Изменить пароль
                         </a>
                     </li>

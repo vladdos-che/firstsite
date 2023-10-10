@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.dispatch import Signal
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib import auth
@@ -7,6 +8,8 @@ from django.views.generic import ListView, FormView, TemplateView, RedirectView
 from django.urls import reverse_lazy
 
 from authapp.forms import UserLoginForm, RegisterUserForm
+from authapp.models import BbUser
+from authapp.signals import create_user_profile, user_logout
 
 
 def login(request):
@@ -21,6 +24,11 @@ def login(request):
 
         if user and user.is_active:
             auth.login(request, user)
+
+            create_user_profile.send(sender=BbUser.objects.get(
+                username=login_form.cleaned_data.get('username')
+            ))  # lesson_42_hw
+
             return HttpResponseRedirect(reverse('index'))
 
     context = {
@@ -47,6 +55,11 @@ def register(request):
                 transaction.commit()
             finally:
                 transaction.set_autocommit(True)
+
+            create_user_profile.send(sender=BbUser.objects.get(
+                username=register_form.cleaned_data.get('username')
+            ))  # lesson_42_hw
+
             return HttpResponseRedirect(reverse('authapp:login'))
     else:
         register_form = RegisterUserForm()
@@ -60,7 +73,10 @@ def register(request):
 
 
 def logout(request):
+    user_logout.send(sender=request.user)  # lesson_42_hw
+
     auth.logout(request)
+
     return HttpResponseRedirect(reverse('index'))
 
 
