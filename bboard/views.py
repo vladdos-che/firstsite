@@ -28,6 +28,7 @@ import logging  # lesson_16_hw
 
 from bboard.serializers import RubricSerializer
 from bboard.signals import add_bb
+from bboard.utils import RubricMixin
 
 
 def count_bb():
@@ -421,7 +422,9 @@ class BbLoginRedirectView(RedirectView):  # lesson_16_hw
 #     return HttpResponse(render_to_string('bboard/detail.html', context, request))
 
 
-class BbDetailView(DetailView):
+class BbDetailView(LoginRequiredMixin, RubricMixin, DetailView):
+    login_url = reverse_lazy('login')  # lesson_47_hw
+
     model = Bb
 
     def get_context_data(self, **kwargs):
@@ -430,7 +433,7 @@ class BbDetailView(DetailView):
         # parser = get_parser()
         # context['parsed_content'] = parser.render(context['bb'].content)
 
-        context['rubrics'] = Rubric.objects.all()
+        # context['rubrics'] = Rubric.objects.all()
         context['bbs'] = get_list_or_404(Bb, rubric=context['bb'].rubric)
         return context
 
