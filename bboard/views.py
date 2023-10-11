@@ -18,12 +18,15 @@ from django.urls import reverse
 from precise_bbcode.bbcode import get_parser
 from django.contrib import messages  # lesson_44_hw
 from django.core.signing import Signer  # lesson_44_hw
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
 
 import logging  # lesson_16_hw
 
+from bboard.serializers import RubricSerializer
 from bboard.signals import add_bb
 
 
@@ -545,3 +548,19 @@ def search(request):
 class CaptchaLibraryView(FormView):  # lesson_32_hw
     template_name = 'bboard/captcha_library.html'
     form_class = CaptchaLibraryForm
+
+
+@api_view(['GET'])
+def api_rubrics(request):
+    if request.method == 'GET':
+        rubrics = Rubric.objects.all()
+        serializer = RubricSerializer(rubrics, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def api_rubric_detail(request, pk):
+    if request.method == 'GET':
+        rubric = Rubric.objects.get(pk=pk)
+        serializer = RubricSerializer(rubric)
+        return Response(serializer.data)

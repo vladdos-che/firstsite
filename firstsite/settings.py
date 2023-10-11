@@ -35,6 +35,7 @@ ALLOWED_HOSTS = [
     '127.2.3.4',
     '127.3.3.3',
     '127.0.0.1',
+    'localhost',
 ]
 
 INTERNAL_IPS = [
@@ -58,6 +59,8 @@ INSTALLED_APPS = [
     'django_cleanup',
     'easy_thumbnails',
     'django_redis',
+    'rest_framework',
+    'corsheaders',
 
     'bboard.apps.BboardConfig',
     'testapp.apps.TestappConfig',
@@ -66,10 +69,17 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
     # 'django.middleware.cache.UpdateCacheMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',  # lesson_49
+
     'django.middleware.common.CommonMiddleware',
+
     # 'django.middleware.cache.FetchFromCacheMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -315,3 +325,8 @@ ADMINS = [
 #
 # SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # SESSION_CACHE_ALIAS = "default"
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:5500',
+    'https://localhost:5500',
+]

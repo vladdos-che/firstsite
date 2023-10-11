@@ -5,7 +5,7 @@ from django.views.generic.dates import WeekArchiveView
 from bboard.models import Bb
 from bboard.views import BbAddView, BbByRubricView, BbDetailView, BbIndexView, BbMonthArchiveView, \
     BbRedirectView, BbIndexRedirectView, index, by_rubric, BbLoginRedirectView, BbByRubricByDateView, \
-    IceCreamCreateView, rubrics, bbs, search, CaptchaLibraryView, BbEditView
+    IceCreamCreateView, rubrics, bbs, search, CaptchaLibraryView, BbEditView, api_rubrics, api_rubric_detail
 
 vals = {
     'name': 'index',
@@ -20,10 +20,14 @@ vals = {
 # ]
 
 urlpatterns = [
-    path(r'', index, name='index'),
-    path(r'rubrics/', rubrics, name='rubrics'),
-    path(r'bbs/<int:rubric_id>/', bbs, name='bbs'),
-    path(r'page/<int:page>/', index, name='page'),
+    path('', index, name='index'),
+    path('rubrics/', rubrics, name='rubrics'),
+
+    path('api/rubrics/', api_rubrics),
+    path('api/rubrics/<int:pk>/', api_rubric_detail),
+
+    path('bbs/<int:rubric_id>/', bbs, name='bbs'),
+    path('page/<int:page>/', index, name='page'),
 
     # path('', BbIndexView.as_view(), name='index'),
     path('index/', BbIndexRedirectView.as_view(), name='index_old'),
