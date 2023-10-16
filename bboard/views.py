@@ -18,9 +18,13 @@ from django.urls import reverse
 from precise_bbcode.bbcode import get_parser
 from django.contrib import messages  # lesson_44_hw
 from django.core.signing import Signer  # lesson_44_hw
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from bboard.forms import BbForm, IceCreamForm, SearchForm, CaptchaLibraryForm
 from bboard.models import Bb, Rubric
@@ -69,6 +73,7 @@ class BbAddView(SuccessMessageMixin, UserPassesTestMixin, FormView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     initial = {'price': 0.0}
+
     # success_message = 'Объявление о продаже товара "% (title)s" создано.'
 
     # Start For UserPassesTestMixin
@@ -555,6 +560,7 @@ class CaptchaLibraryView(FormView):  # lesson_32_hw
 
 
 @api_view(['GET', 'POST'])
+# @permission_classes((IsAuthenticated,))
 def api_rubrics(request):
     if request.method == 'GET':
         rubrics = Rubric.objects.all()
@@ -584,3 +590,40 @@ def api_rubric_detail(request, pk):
     elif request.method == 'DELETE':
         rubric.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# lesson_50
+
+# class APIRubrics(APIView):
+#     def get(self, request):
+#         rubrics = Rubric.objects.all()
+#         serializer = RubricSerializer(rubrics, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = RubricSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class APIRubrics(generics.ListCreateAPIView):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+
+
+class APIRubricDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+
+
+class APIRubricViewSet(ModelViewSet):
+    queryset = Rubric.objects.all()
+    serializer_class = RubricSerializer
+    # permission_classes = (AllowAny,)
+
+
+# class APIRubricViewSet(ReadOnlyModelViewSet):
+#     queryset = Rubric.objects.all()
+#     serializer_class = RubricSerializer

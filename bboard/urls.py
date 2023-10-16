@@ -1,11 +1,13 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.views.decorators.cache import cache_page
 from django.views.generic.dates import WeekArchiveView
+from rest_framework.routers import DefaultRouter
 
 from bboard.models import Bb
 from bboard.views import BbAddView, BbByRubricView, BbDetailView, BbIndexView, BbMonthArchiveView, \
     BbRedirectView, BbIndexRedirectView, index, by_rubric, BbLoginRedirectView, BbByRubricByDateView, \
-    IceCreamCreateView, rubrics, bbs, search, CaptchaLibraryView, BbEditView, api_rubrics, api_rubric_detail
+    IceCreamCreateView, rubrics, bbs, search, CaptchaLibraryView, BbEditView, api_rubrics, api_rubric_detail, \
+    APIRubrics, APIRubricDetail, APIRubricViewSet
 
 vals = {
     'name': 'index',
@@ -19,12 +21,22 @@ vals = {
 #     path('login/', login, name='login'),
 # ]
 
+router = DefaultRouter()
+router.register('rubrics', APIRubricViewSet)
+
 urlpatterns = [
     path('', index, name='index'),
     path('rubrics/', rubrics, name='rubrics'),
 
-    path('api/rubrics/', api_rubrics),
-    path('api/rubrics/<int:pk>/', api_rubric_detail),
+    # path('api/v1/rubrics/', api_rubrics),
+    # path('api/v1/rubrics/<int:pk>/', api_rubric_detail),
+
+    # lesson_50 Start
+    # path('api/v1/rubrics/', APIRubrics.as_view()),
+    # path('api/v1/rubrics/<int:pk>/', APIRubricDetail.as_view()),
+
+    path('api/v1/', include(router.urls)),
+    # lesson_50 End
 
     path('bbs/<int:rubric_id>/', bbs, name='bbs'),
     path('page/<int:page>/', index, name='page'),
