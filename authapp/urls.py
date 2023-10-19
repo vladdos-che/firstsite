@@ -1,6 +1,6 @@
 from django.urls import path
 
-from authapp.views import login, logout, register, PasswordChangeRedirectView
+from authapp.views import login, logout, register, PasswordChangeRedirectView, api_users
 
 app_name = "authapp"
 
@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
     path('change_password/', PasswordChangeRedirectView.as_view(), name='change_password'),  # lesson_39_hw
+    path('api/v1/users/', api_users),
 ]

@@ -6,9 +6,12 @@ from django.contrib import auth
 from django.urls import reverse
 from django.views.generic import ListView, FormView, TemplateView, RedirectView
 from django.urls import reverse_lazy
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from authapp.forms import UserLoginForm, RegisterUserForm
 from authapp.models import BbUser
+from authapp.serializers import BbUserSerializer
 from authapp.signals import create_user_profile, user_logout
 
 
@@ -82,3 +85,11 @@ def logout(request):
 
 class PasswordChangeRedirectView(RedirectView):
     url = reverse_lazy('password_change')
+
+
+@api_view(['GET'])
+def api_users(request):
+    if request.method == 'GET':
+        rubrics = BbUser.objects.all()
+        serializer = BbUserSerializer(rubrics, many=True)
+        return Response(serializer.data)

@@ -1,3 +1,5 @@
+# from logging import getLogger
+
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -34,6 +36,8 @@ import logging  # lesson_16_hw
 from bboard.serializers import RubricSerializer
 from bboard.signals import add_bb
 from bboard.utils import RubricMixin
+
+# logger = getLogger(__name__)
 
 
 def count_bb():
@@ -246,6 +250,8 @@ class BbIndexRedirectView(RedirectView):
 
 # @cache_page(60 * 1)
 def index(request, page=1):
+    # logger.info('Мы всё проиграли, но мы на главной!')
+
     messages.add_message(request, 100, 'Случилось что-то очень хорошее! У нас всё получилось!')  # lesson_44_hw
     signer = Signer()  # lesson_44_hw
     signer_message = signer.sign('На что я подписался?!')  # lesson_44_hw
