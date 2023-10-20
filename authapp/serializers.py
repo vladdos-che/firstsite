@@ -5,4 +5,4 @@ from .models import BbUser
 class BbUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BbUser
-        fields = ('surname', 'email')
+        fields = ('username', 'email')

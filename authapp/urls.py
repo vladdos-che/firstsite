@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
     path('change_password/', PasswordChangeRedirectView.as_view(), name='change_password'),  # lesson_39_hw
-    path('api/v1/users/', api_users),
+
+    path('api/v1/users/', api_users),  # lesson_49_hw
 ]
