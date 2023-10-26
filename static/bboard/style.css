@@ -1,0 +1,10 @@
+header h1 {
+    font-size: 40px;
+    text-transform: uppercase;
+    text-align: center;
+    background: url('bg.jpg') left / auto 100% no-repeat;
+}
+
+#login_confirmed {
+    display: none;
+}

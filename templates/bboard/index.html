@@ -1,0 +1,120 @@
+{% extends "layout/basic.html" %}
+{% load bootstrap4 %}
+{% load filtersandtags %}
+
+{% block content %}
+
+{#    {{ groups_this_user }}#}
+
+{#    <p>#}
+{#        {% if page.has_previous %}#}
+{#            <a href="?page={{ page.previous_page_number }}">&lt;</a>#}
+{#            &nbsp;&nbsp; | &nbsp;&nbsp;#}
+{#        {% endif %}#}
+{#        Страница: {{ page.number }}#}
+{#        {% if page.has_next %}#}
+{#            &nbsp;&nbsp; | &nbsp;&nbsp;#}
+{#            <a href="?page={{ page.next_page_number }}">&gt;</a>#}
+{#        {% endif %}#}
+{#    </p>#}
+
+    <p>
+        {% if page.has_previous %}
+            <a href="{% url "page" page.previous_page_number %}">&#9664;</a>
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+        {% endif %}
+        Страница: {{ page.number }}
+        {% if page.has_next %}
+            &nbsp;&nbsp; | &nbsp;&nbsp;
+            <a href="{% url "page" page.next_page_number %}">&#9654;</a>
+        {% endif %}
+    </p>
+
+{#    {% bootstrap_pagination page size='small' %}#}
+
+    <p>Количество записей: {{ page.paginator.num_pages }}</p>
+    <p>Количество посещений: {{ cnt }}</p>
+    {% if cnt <= 100 %}
+        <div class="mb-5 progress" role="progressbar" aria-label="Basic example" aria-valuenow="{{ cnt }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: {{ cnt }}%"></div>
+        </div>
+    {% else %}
+        <div class="mb-5 progress" role="progressbar" aria-label="Basic example" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar" style="width: 100%"></div>
+        </div>
+    {% endif %}
+
+    {{ signer_message }}  {# lesson_41_hw #}
+    {% if messages %}  {# lesson_41_hw #}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>{{ block.super }}</p>
+
+    {% for bb in bbs %}
+        <div class="{% cycle 'red' 'green' 'blue' %}">  {# lesson_22_hw #}
+{#            <h2>{{ bb.title }}</h2>#}
+            <h2>
+{#                <a href="{% url 'read' bb.pk %}">#}
+                <a href="{% url 'detail' pk=bb.pk %}">
+                    {{ bb.title_and_price|lower|title }}
+                </a>
+            </h2>
+
+            <div class="accordion bg-dark" data-bs-theme="dark" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Описание:
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+{#                            <p>{% firstof bb.content|lower|capfirst 'Контента нет' %}</p>  {# lesson_22_hw #}
+                            <p>{{ bb.content.rendered|lower|capfirst }}</p>  {# lesson_34 #}
+
+{#                            <p>Описание: {% str_to_list bb.content.rendered ", " %}</p>  {# lesson_36_hw #}
+{#                            <p style="color: red">Описание: {% content_to_words bb.content.rendered %}</p>  {# lesson_36_hw #}
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                            <p>Цена: {{ bb.price|cur:'tng.' }}</p>  {# lesson_36 #}
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+{#                            <p>{{ bb.price|cur }}</p>  {# lesson_36 #}
+
+                            <p>Цена в долларах: {{ bb.price|tng_to_dollars }}</p>  {# lesson_36_hw #}
+{#                            <p>Цена из долларов в тенге: {{ bb.price|dollars_to_tng }}</p>  {# lesson_36_hw #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p><a href="{{ bb.rubric.get_absolute_url }}">
+                {{ bb.rubric.name|upper }}</a></p>
+            <p>{{ bb.published|date:"d.m.Y H:i:s" }}</p>
+        </div>
+    {% endfor %}
+
+    <p>
+        {% for d in date_list %}
+        {{ d.year }}
+        {% endfor %}
+    </p>
+
+    <div>{% lst ' | ' '1' '2' '3' %}</div>
+
+    <div>{% ulist '1' '2' '3' %}</div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+// const domain = 'http://localhost:8000/';
+const domain = 'http://127.0.0.1:8000/';
+
+const username = 'admin';
+const password = '123';
+const credentials = window.btoa(username + ':' + password);
+
+// let list = document.getElementById('list');
+let list = document.querySelector('#list');
+let listLoader = new XMLHttpRequest();
+
+let id = document.getElementById('id');
+let name = document.getElementById('name');
+let rubricLoader = new XMLHttpRequest();
+
+let rubricUpdater = new XMLHttpRequest();
+let rubricDeleter = new XMLHttpRequest();
+
+listLoader.addEventListener('readystatechange', () => {
+    if (listLoader.readyState == 4) {
+        if (listLoader.status == 200) {
+            let data = JSON.parse(listLoader.responseText);
+            let s = '<ul>', d;
+            for (let i = 0; i < data.length; i++) {
+                d = data[i];
+                s += '<li>' + d.name + ' <a href="' + domain + 
+                'api/v1/rubrics/' + d.id + 
+                '/" class="detail">Вывести</a> <a href="' + domain + 
+                'api/v1/rubrics/' + d.id + 
+                '/" class="delete">Удалить</a></li>';
+            }
+            s += '</ul>';
+            list.innerHTML = s;
+
+            links = list.querySelectorAll('ul li a.delete'); 
+            links.forEach((link) => {link.addEventListener('click', rubricDelete);});
+        } else
+            console.log(listLoader.statusText);
+    }
+});
+
+rubricLoader.addEventListener('readystatechange', () => {
+    if (rubricLoader.readyState == 4) {
+        if (rubricLoader.status ==200) {
+            let data = JSON.parse(rubricLoader.responseText);
+            id.value = data.id;
+            name.value = data.name;
+        } else
+            console.log(rubricLoader.statusText);
+    }
+});
+
+rubricUpdater.addEventListener('readystatechange', () => { 
+    if (rubricUpdater.readyState == 4) { 
+        if ((rubricUpdater.status == 200) || 
+        (rubricUpdater.status == 201)) { 
+            listLoad(); 
+            name.form.reset(); 
+            id.value = ''; 
+        } else 
+            window.alert(rubricUpdater.statusText); 
+    } 
+});
+
+name.form.addEventListener('submit', (evt) => { 
+    evt.preventDefault(); 
+    let vid = id.value, url, method; 
+    if (vid) { 
+        url = 'api/v1/rubrics/' + vid + '/'; 
+        method = 'PUT'; 
+    } else { 
+        url = 'api/v1/rubrics/'; 
+        method = 'POST'; 
+    } 
+    let data = JSON.stringify({id: vid, name: name.value});
+    rubricUpdater.open(method, domain + url, true);
+    rubricUpdater.setRequestHeader('Content-Type', 'application/json');
+
+    // data = 'id=' + encodeURIComponent(vid);
+    // data += '&name=' + encodeURIComponent(name.value);
+    // rubricUpdater.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    rubricUpdater.send(data); 
+});
+
+rubricDeleter.addEventListener('readystatechange', () => {
+    if (rubricDeleter.readyState == 4) { 
+        if (rubricDeleter.status = 204) 
+            listLoad(); 
+        else
+            window.alert(rubricDeleter.statusText); 
+    }
+}); 
+
+
+function rubricDelete(evt) { 
+    evt.preventDefault(); 
+    rubricDeleter.open('DELETE', evt.target.href, true); 
+    rubricDeleter.send(); 
+}
+
+
+function listLoad() {
+    listLoader.open('GET', domain + 'api/v1/rubrics/', true);
+    listLoader.setRequestHeader('Authorization', 'Basic ' + credentials);
+    listLoader.send();
+}
+
+
+function rubricLoad(evt) {
+    evt.preventDefault();
+    rubricLoader.open('GET', evt.target.href, true);
+    rubricLoader.send();
+    }
+
+
+listLoad();

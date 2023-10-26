@@ -1,0 +1,92 @@
+{% load count_bbs %}
+{% load bootstrap4 %}
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item d-block">
+                    <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Главная</a>
+                </li>
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'authapp:logout' %}">
+                            Logout: {{ user.username }}
+                        </a>
+                    </li>
+                {% else %}
+                {#        <a href="{% url 'authapp:login' %}">#}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'authapp:login' %}">
+                            Login
+                        </a>
+                    </li>
+
+                    <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Blaz</strong>
+                            <small>Бот</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                        </div>
+                        <div class="toast-body">
+                            Вы не вошли! Вход: <a class="nav-link" href="{% url 'authapp:login' %}">Login</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'authapp:change_password' %}">
+                            Изменить пароль
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'rubrics' %}">
+                                Изменить рубрики
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add' %}">
+                        Добавить
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add_icecream' %}">  {# lesson_25_hw #}
+                        Добавить мороженое
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'captcha_library' %}">  {# lesson_32_hw #}
+                        Библиотека каптч
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Рубрики
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for rubric in rubrics %}
+                                <li><a class="dropdown-item" href="{{ rubric.get_absolute_url }}">
+                                    {{ rubric.name }}{% if count_bb %}
+                                        ({{ count_bb|count_bbs:rubric.pk }})
+                                    {% endif %}
+                                </a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

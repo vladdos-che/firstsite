@@ -1,0 +1,16 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}{{ title|title }}{% endblock %}
+
+{% block content %}
+    <h2>{{ title|title }}</h2>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Поиск</button>
+    </form>
+
+    <p>{{ my_user }}</p>
+    <p>{{ my_users }}</p>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout/basic.html" %}
+{% load bbcode_tags  %}
+{% load thumbnail %}
+
+{% block title %}{{ bb.title }}{% endblock %}
+
+{% block content %}
+
+    <p>Рубрика: {{ bb.rubric.name }}</p>
+
+    <h1>Товар: {{ bb.title }}</h1>
+    <div>
+        <img src="{{ bb.picture|thumbnail_url:'default' }}" alt="bb">
+    </div>
+{#    <p>Описание: {{ bb.content }}</p>#}
+{#    <p>Описание: {{ bb.content|bbcode|safe }}</p>#}
+{#    <p>Описание: {% bbcode bb.content %}</p>#}
+{#    <p>Описание: {{ parsed_content|safe }}</p>#}
+    <p>Описание: {{ bb.content.rendered }}</p>
+    <p>Цена: {{ bb.price }} тг.</p>
+
+{% endblock %}
