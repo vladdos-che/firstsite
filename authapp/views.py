@@ -8,6 +8,9 @@ from django.views.generic import ListView, FormView, TemplateView, RedirectView
 from django.urls import reverse_lazy
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status, generics
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from authapp.forms import UserLoginForm, RegisterUserForm
 from authapp.models import BbUser
@@ -87,9 +90,41 @@ class PasswordChangeRedirectView(RedirectView):
     url = reverse_lazy('password_change')
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def api_users(request):
     if request.method == 'GET':
-        rubrics = BbUser.objects.all()
-        serializer = BbUserSerializer(rubrics, many=True)
+        users = BbUser.objects.all()
+        serializer = BbUserSerializer(users, many=True)
         return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = BbUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class APIBbUsers(APIView):  # lesson_52_hw
+    def get(self, request):
+        users = BbUser.objects.all()
+        serializer = BbUserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = BbUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class APIBbUsersDel(APIView):  # lesson_52_hw
+    def delete(self, request, username):
+        user = BbUser.objects.get(username=username)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class APIRubricViewSet(ModelViewSet):  # lesson_51_hw
+    queryset = BbUser.objects.all()
+    serializer_class = BbUserSerializer
