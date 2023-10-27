@@ -1,8 +1,12 @@
 const domain = 'http://127.0.0.1:8000/';
+let username = '';
+let password = '';
+let credentials = null;
 
 let list = document.getElementById('list');
 let listLoader = new XMLHttpRequest();
 
+let form = document.querySelector('#bbuser_form');
 let userName = document.querySelector('#username');
 let userEmail = document.querySelector('#email');
 let userPassword1 = document.querySelector('#password1');
@@ -10,6 +14,33 @@ let userPassword2 = document.querySelector('#password2');
 let rubricUpdater = new XMLHttpRequest();
 
 let rubricDeleter = new XMLHttpRequest();
+
+let login = document.querySelector('#login');
+let usersUsername = document.querySelector('#users_username');
+let usersPassword = document.querySelector('#users_password');
+let usersButton = document.querySelector('#users_button');
+
+
+function checkUser(username, password) {
+    if (username == "" || password == "") {
+        list.style = 'display: none;';
+        form.style = 'display: none;';
+        login.style = 'display: block;';
+    } else {
+        list.style = 'display: block;';
+        form.style = 'display: block;';
+        login.style = 'display: none;';
+    }
+}
+
+
+usersButton.addEventListener('click', () => {
+    username = usersUsername.value;
+    password = usersPassword.value;
+    credentials = window.btoa(username + ':' + password);
+    checkUser(username, password);
+    listLoad();
+});
 
 listLoader.addEventListener('readystatechange', () => {
     if (listLoader.readyState == 4) {
@@ -73,6 +104,7 @@ rubricDeleter.addEventListener('readystatechange', () => {
 
 function listLoad() {
     listLoader.open('GET', domain + 'auth/api/v1/users/', true);
+    listLoader.setRequestHeader('Authorization', 'Basic ' + credentials);
     listLoader.send();
 }
 
@@ -83,5 +115,4 @@ function rubricDelete(evt) {
     rubricDeleter.send();
 }    
 
-
-listLoad();
+checkUser(username, password);
